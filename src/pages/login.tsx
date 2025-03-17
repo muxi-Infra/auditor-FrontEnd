@@ -24,7 +24,7 @@ export default function Login() {
           setLoggedIn(true);
           try {
             const userInfo = await getMyInfo();
-            updateUser({ ...userInfo, token });
+            updateUser({ ...userInfo });
           } catch (infoError) {
             console.error('Failed to fetch user info:', infoError);
           }

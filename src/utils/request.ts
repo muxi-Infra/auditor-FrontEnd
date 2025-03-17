@@ -27,44 +27,54 @@ function addQueryParams(url: string, params?: Record<string, string>): string {
 /**
  * Wrapper for HTTP GET requests
  */
-function get<T>(path: string, options: RequestOptions = {}): Promise<T> {
+async function get<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const url = addQueryParams(BASE_URL + path, options.params);
-  return fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((apiResponse) => (apiResponse as Response<T>).data);
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const apiResponse = await response.json();
+    return (apiResponse as Response<T>).data;
+  } catch (error) {
+    console.error(`GET request to ${url} failed:`, error);
+    throw error;
+  }
 }
 
 /**
  * Wrapper for HTTP POST requests
  */
-function post<T>(path: string, options: PostOptions): Promise<T> {
+async function post<T>(path: string, options: PostOptions): Promise<T> {
   const url = addQueryParams(BASE_URL + path, options.params);
-  return fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    body: JSON.stringify(options.body),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((apiResponse) => (apiResponse as Response<T>).data);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      body: JSON.stringify(options.body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const apiResponse = await response.json();
+    return (apiResponse as Response<T>).data;
+  } catch (error) {
+    console.error(`POST request to ${url} failed:`, error);
+    throw error;
+  }
 }
 
 /**
@@ -75,13 +85,18 @@ async function getWithAuth<T>(
   token: string,
   options: RequestOptions = {}
 ): Promise<T> {
-  return get<T>(path, {
-    ...options,
-    headers: {
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    return await get<T>(path, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error(`Authenticated GET request to ${path} failed:`, error);
+    throw error;
+  }
 }
 
 /**
@@ -92,13 +107,18 @@ async function postWithAuth<T>(
   token: string,
   options: PostOptions
 ): Promise<T> {
-  return post<T>(path, {
-    ...options,
-    headers: {
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    return await post<T>(path, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error(`Authenticated POST request to ${path} failed:`, error);
+    throw error;
+  }
 }
 
 export { get, post, getWithAuth, postWithAuth };
