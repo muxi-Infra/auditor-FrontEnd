@@ -20,7 +20,10 @@ const useUserStore = create<UserStore>()(
       token: '',
       updateUser: (updates: Partial<User>) =>
         set((state) => ({
-          user: state.user ? { ...state.user, ...updates } : null,
+          user: {
+            ...updates,
+            ...state.user,
+          },
         })),
       isLoggedIn: false,
       setLoggedIn: (value: boolean) => set({ isLoggedIn: value }),

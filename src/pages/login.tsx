@@ -18,17 +18,23 @@ export default function Login() {
       setIsLoading(true);
       setError(undefined);
       login(code)
-        .then(async (token) => {
+        .then((token) => {
           console.log(token);
           setToken(token);
           setLoggedIn(true);
-          try {
-            const userInfo = await getMyInfo();
-            updateUser({ ...userInfo });
-          } catch (infoError) {
-            console.error('Failed to fetch user info:', infoError);
-          }
-          navigate('/');
+          return getMyInfo()
+            .then((userInfo) => {
+              updateUser({ ...userInfo });
+              navigate('/');
+            })
+            .catch((infoError) => {
+              console.error('Failed to fetch user info:', infoError);
+              setError(
+                infoError instanceof Error
+                  ? infoError.message
+                  : 'Failed to fetch user info'
+              );
+            });
         })
         .catch((err) => {
           setError(err instanceof Error ? err.message : 'Login failed');

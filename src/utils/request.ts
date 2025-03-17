@@ -13,8 +13,6 @@ interface Response<T> {
   msg: string;
 }
 
-const BASE_URL = '';
-
 /**
  * Add query parameters to URL
  */
@@ -28,7 +26,7 @@ function addQueryParams(url: string, params?: Record<string, string>): string {
  * Wrapper for HTTP GET requests
  */
 async function get<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const url = addQueryParams(BASE_URL + path, options.params);
+  const url = addQueryParams(path, options.params);
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -54,7 +52,7 @@ async function get<T>(path: string, options: RequestOptions = {}): Promise<T> {
  * Wrapper for HTTP POST requests
  */
 async function post<T>(path: string, options: PostOptions): Promise<T> {
-  const url = addQueryParams(BASE_URL + path, options.params);
+  const url = addQueryParams(path, options.params);
   try {
     const response = await fetch(url, {
       method: 'POST',

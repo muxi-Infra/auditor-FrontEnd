@@ -13,10 +13,7 @@ async function login(code: string) {
 
 async function getMyInfo() {
   const token = useUserStore.getState().getToken();
-  const info = await getWithAuth<Omit<User, 'token'>>(
-    '/api/v1/user/getMyInfo',
-    token
-  );
+  const info = await getWithAuth<User>('/api/v1/user/getMyInfo', token);
   console.log(info);
   return info;
 }
