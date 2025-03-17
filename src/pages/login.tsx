@@ -9,7 +9,7 @@ export default function Login() {
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { updateUser, setToken, setLoggedIn } = useUserStore();
+  const { updateUser, setToken } = useUserStore();
 
   useEffect(() => {
     const code = params.get('accessCode');
@@ -21,7 +21,6 @@ export default function Login() {
         .then((token) => {
           console.log(token);
           setToken(token);
-          setLoggedIn(true);
           return getMyInfo()
             .then((userInfo) => {
               updateUser({ ...userInfo });

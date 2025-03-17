@@ -6,11 +6,10 @@ interface UserStore {
   user: User | null;
   token: string;
   updateUser: (updates: Partial<User>) => void;
-  isLoggedIn: boolean;
-  setLoggedIn: (value: boolean) => void;
   getToken: () => string;
   setToken: (token: string) => void;
   logout: () => void;
+  isLoggedIn: () => boolean;
 }
 
 const useUserStore = create<UserStore>()(
@@ -25,11 +24,10 @@ const useUserStore = create<UserStore>()(
             ...state.user,
           },
         })),
-      isLoggedIn: false,
-      setLoggedIn: (value: boolean) => set({ isLoggedIn: value }),
       getToken: () => get().token,
-      setToken: (token: string) => set({ token: token }),
-      logout: () => set({ user: null, isLoggedIn: false }),
+      setToken: (token: string) => set({ token }),
+      logout: () => set({ user: null, token: '' }),
+      isLoggedIn: () => Boolean(get().token && get().user),
     }),
     {
       name: 'user-storage',
