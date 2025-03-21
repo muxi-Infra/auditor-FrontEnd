@@ -93,7 +93,7 @@ function AppSidebar() {
           {projects.map((project) => (
             <ProjectItem
               key={project.project_id}
-              path={project.project_id.toString()}
+              path={`/${project.project_id}`}
               onClick={() => navigate(`/${project.project_id}`)}
             >
               {project.project_name}
