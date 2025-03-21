@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/Table';
-import useRouteStore from '@/store/useRouteStore';
+import useRouteStore from '@/stores/route';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 

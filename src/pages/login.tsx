@@ -1,5 +1,5 @@
 import { getMyInfo, login } from '@/apis';
-import useUserStore from '@/store/useUserStore';
+import useUserStore from '@/stores/user';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
@@ -12,37 +12,37 @@ export default function Login() {
   const { updateUser, setToken } = useUserStore();
 
   useEffect(() => {
-    const code = params.get('accessCode');
-    console.log(code);
-    if (code) {
+    const handleLogin = async () => {
+      const code = params.get('accessCode');
+      console.log(code);
+
+      if (!code) return;
+
       setIsLoading(true);
       setError(undefined);
-      login(code)
-        .then((token) => {
-          console.log(token);
-          setToken(token);
-          return getMyInfo()
-            .then((userInfo) => {
-              updateUser({ ...userInfo });
-              navigate('/');
-            })
-            .catch((infoError) => {
-              console.error('Failed to fetch user info:', infoError);
-              setError(
-                infoError instanceof Error
-                  ? infoError.message
-                  : 'Failed to fetch user info'
-              );
-            });
-        })
-        .catch((err) => {
-          setError(err instanceof Error ? err.message : 'Login failed');
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
-  }, []);
+
+      try {
+        const token = await login(code);
+        console.log(token);
+        setToken(token);
+
+        const userInfo = await getMyInfo();
+        updateUser({ ...userInfo });
+        navigate('/');
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error('Error during login or fetching user info:', err);
+          setError(err.message);
+        } else {
+          setError('An unexpected error occurred');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    handleLogin();
+  }, [params, navigate, setToken, updateUser]);
 
   if (isLoading) {
     return <div>Logging in...</div>;

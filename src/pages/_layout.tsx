@@ -13,8 +13,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/utils/style';
-import useRouteStore from '@/store/useRouteStore';
-import useUserStore from '@/store/useUserStore';
+import useRouteStore from '@/stores/route';
+import useUserStore from '@/stores/user';
 import { ComponentProps, ElementRef, ReactNode, forwardRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 

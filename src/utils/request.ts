@@ -1,3 +1,5 @@
+import useUserStore from '@/stores/user';
+
 interface RequestOptions {
   headers?: HeadersInit;
   params?: Record<string, string>;
@@ -80,9 +82,10 @@ async function post<T>(path: string, options: PostOptions): Promise<T> {
  */
 async function getWithAuth<T>(
   path: string,
-  token: string,
   options: RequestOptions = {}
 ): Promise<T> {
+  const token = useUserStore.getState().getToken();
+
   try {
     return await get<T>(path, {
       ...options,

@@ -4,9 +4,9 @@ import { persist } from 'zustand/middleware';
 
 interface UserStore {
   user: User | null;
-  token: string;
+  token: string | null;
   updateUser: (updates: Partial<User>) => void;
-  getToken: () => string;
+  getToken: () => string | null;
   setToken: (token: string) => void;
   logout: () => void;
   isLoggedIn: () => boolean;
@@ -16,7 +16,7 @@ const useUserStore = create<UserStore>()(
   persist(
     (set, get) => ({
       user: null,
-      token: '',
+      token: null,
       updateUser: (updates: Partial<User>) =>
         set((state) => ({
           user: {
@@ -26,7 +26,7 @@ const useUserStore = create<UserStore>()(
         })),
       getToken: () => get().token,
       setToken: (token: string) => set({ token }),
-      logout: () => set({ user: null, token: '' }),
+      logout: () => set({ user: null, token: null }),
       isLoggedIn: () => Boolean(get().token && get().user),
     }),
     {
