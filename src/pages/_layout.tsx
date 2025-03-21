@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/utils/style';
 import useRouteStore from '@/stores/route';
+import useProjectStore from '@/stores/project';
 import useUserStore from '@/stores/user';
 import { ComponentProps, ElementRef, ReactNode, forwardRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -76,15 +77,9 @@ function Header({ menu }: { menu: ReactNode }) {
   );
 }
 
-// AppSidebar 组件
-const projects = [
-  { name: '华师匣子', path: '/ccnubox' },
-  { name: '木犀课栈', path: '/kstack' },
-  { name: '茶馆', path: '/forum' },
-];
-
 function AppSidebar() {
   const navigate = useNavigate();
+  const { projects } = useProjectStore();
   return (
     <Sidebar className="bg-[#ffffff]">
       <SidebarHeader className="h-16">
@@ -97,11 +92,11 @@ function AppSidebar() {
         <SidebarMenu>
           {projects.map((project) => (
             <ProjectItem
-              key={project.path}
-              path={project.path}
-              onClick={() => navigate(project.path)}
+              key={project.project_id}
+              path={project.project_id.toString()}
+              onClick={() => navigate(`/${project.project_id}`)}
             >
-              {project.name}
+              {project.project_name}
             </ProjectItem>
           ))}
         </SidebarMenu>
