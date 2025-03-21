@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { login, getMyInfo } from '../apis';
+import { login, getMyInfo, getProjectList } from '../apis';
 import { post, getWithAuth } from '../utils/request';
 import type { User } from '../types';
 
@@ -11,12 +11,10 @@ vi.mock('../utils/request', () => ({
 
 // Mock useUserStore
 const mockGetToken = vi.fn();
-vi.mock('../store/useUserStore', () => ({
-  default: {
-    getState: vi.fn(() => ({
-      getToken: mockGetToken,
-    })),
-  },
+vi.mock('../stores/user', () => ({
+  default: () => ({
+    getToken: mockGetToken,
+  }),
 }));
 
 describe('API functions', () => {
@@ -36,7 +34,7 @@ describe('API functions', () => {
       const result = await login(mockCode);
 
       // Verify post was called with correct parameters
-      expect(post).toHaveBeenCalledWith('/api/v1/user/login', {
+      expect(post).toHaveBeenCalledWith('/api/v1/auth/login', {
         body: {
           code: mockCode,
         },
@@ -48,8 +46,7 @@ describe('API functions', () => {
   });
 
   describe('getMyInfo', () => {
-    it('should get token and call getWithAuth with correct parameters', async () => {
-      const mockToken = 'test-token';
+    it('should call getWithAuth with correct parameters', async () => {
       const mockUserInfo: Omit<User, 'token'> = {
         avatar: 'https://example.com/avatar.jpg',
         email: 'test@example.com',
@@ -57,24 +54,40 @@ describe('API functions', () => {
         role: 1,
       };
 
-      // Setup mock responses
-      mockGetToken.mockReturnValue(mockToken);
+      // Setup mock response
       vi.mocked(getWithAuth).mockResolvedValue(mockUserInfo);
 
       // Execute getMyInfo
       const result = await getMyInfo();
 
-      // Verify token was retrieved
-      expect(mockGetToken).toHaveBeenCalled();
-
       // Verify getWithAuth was called with correct parameters
-      expect(getWithAuth).toHaveBeenCalledWith(
-        '/api/v1/user/getMyInfo',
-        mockToken
-      );
+      expect(getWithAuth).toHaveBeenCalledWith('/api/v1/user/getMyInfo');
 
       // Verify result
       expect(result).toEqual(mockUserInfo);
+    });
+  });
+
+  describe('getProjectList', () => {
+    it('should call getWithAuth with correct parameters and return project list', async () => {
+      const mockProjects = [
+        { project_id: 1, project_name: 'Project 1' },
+        { project_id: 2, project_name: 'Project 2' },
+      ];
+
+      // Setup mock response
+      vi.mocked(getWithAuth).mockResolvedValue(mockProjects);
+
+      // Execute getProjectList
+      const result = await getProjectList();
+
+      // Verify getWithAuth was called with correct parameters
+      expect(getWithAuth).toHaveBeenCalledWith(
+        '/api/v1/project/getProjectList'
+      );
+
+      // Verify result
+      expect(result).toEqual(mockProjects);
     });
   });
 });
