@@ -19,7 +19,7 @@ export default function Page() {
         setProjects(projectList);
         setIsChecking(false);
         if (projectList.length > 0) {
-          navigate(projectList[0].project_id.toString());
+          navigate(projectList[0].id.toString());
         }
       });
     }

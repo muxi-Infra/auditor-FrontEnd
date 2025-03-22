@@ -1,4 +1,4 @@
-import { User } from './types';
+import { Project, User } from './types';
 import { getWithAuth, post } from './utils/request';
 
 async function login(code: string) {
@@ -16,14 +16,7 @@ async function getMyInfo() {
 async function updateMyInfo() {}
 
 async function getProjectList() {
-  return getWithAuth<
-    [
-      {
-        project_id: number;
-        project_name: string;
-      },
-    ]
-  >('/api/v1/project/getProjectList');
+  return getWithAuth<Project[]>('/api/v1/project/getProjectList');
 }
 
 async function getQiniuToken() {

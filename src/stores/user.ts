@@ -1,3 +1,4 @@
+import { getMyInfo } from '@/apis';
 import { User } from '@/types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -27,7 +28,14 @@ const useUserStore = create<UserStore>()(
       getToken: () => get().token,
       setToken: (token: string) => set({ token }),
       logout: () => set({ user: null, token: null }),
-      isLoggedIn: () => Boolean(get().token && get().user),
+      isLoggedIn: () => {
+        try {
+          getMyInfo();
+          return true;
+        } catch {
+          return false;
+        }
+      },
     }),
     {
       name: 'user-storage',

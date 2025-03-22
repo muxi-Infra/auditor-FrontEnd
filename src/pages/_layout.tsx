@@ -92,11 +92,11 @@ function AppSidebar() {
         <SidebarMenu>
           {projects.map((project) => (
             <ProjectItem
-              key={project.project_id}
-              path={`/${project.project_id}`}
-              onClick={() => navigate(`/${project.project_id}`)}
+              key={project.id}
+              path={`/${project.id}`}
+              onClick={() => navigate(`/${project.id}`)}
             >
-              {project.project_name}
+              {project.name}
             </ProjectItem>
           ))}
         </SidebarMenu>
