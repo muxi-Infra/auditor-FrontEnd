@@ -1,12 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { login, getMyInfo, getProjectList } from '../apis';
-import { post, getWithAuth } from '../utils/request';
+import { login, getMyInfo, getProjectList, getProjectItems } from '../apis';
+import { post, getWithAuth, postWithAuth } from '../utils/request';
 import type { User } from '../types';
 
 // Mock request functions
 vi.mock('../utils/request', () => ({
   post: vi.fn(),
   getWithAuth: vi.fn(),
+  postWithAuth: vi.fn(),
 }));
 
 // Mock useUserStore
@@ -88,6 +89,73 @@ describe('API functions', () => {
 
       // Verify result
       expect(result).toEqual(mockProjects);
+    });
+  });
+
+  describe('getProjectItems', () => {
+    it('should call postWithAuth with correct parameters and return items', async () => {
+      const mockItems = [
+        {
+          id: 1,
+          author: 'User 1',
+          tags: ['bug', 'frontend'],
+          status: 0,
+          public_time: 1679555555,
+          auditor: 123,
+          content: {
+            topic: {
+              title: 'Test Issue',
+              content: 'Test content',
+              pictures: [],
+            },
+            last_comment: {
+              content: 'Last comment',
+              pictures: [],
+            },
+            next_comment: {
+              content: 'Next comment',
+              pictures: [],
+            },
+          },
+        },
+      ];
+
+      // Setup mock response
+      vi.mocked(postWithAuth).mockResolvedValue(mockItems);
+
+      // Execute getProjectItems
+      const result = await getProjectItems(1);
+
+      // Verify postWithAuth was called with correct parameters
+      expect(postWithAuth).toHaveBeenCalledWith('/api/v1/item/select', {
+        body: {
+          project_id: 1,
+        },
+      });
+
+      // Verify result
+      expect(result).toEqual(mockItems);
+    });
+
+    it('should handle empty response', async () => {
+      // Setup mock response
+      vi.mocked(postWithAuth).mockResolvedValue([]);
+
+      // Execute getProjectItems
+      const result = await getProjectItems(1);
+
+      // Verify result is empty array
+      expect(result).toEqual([]);
+    });
+
+    it('should handle API error', async () => {
+      const errorMessage = 'Failed to fetch items';
+
+      // Setup mock error
+      vi.mocked(postWithAuth).mockRejectedValue(new Error(errorMessage));
+
+      // Verify error is thrown
+      await expect(getProjectItems(1)).rejects.toThrow(errorMessage);
     });
   });
 });

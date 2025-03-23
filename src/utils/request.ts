@@ -103,11 +103,9 @@ async function getWithAuth<T>(
 /**
  * Wrapper for HTTP POST requests with authentication
  */
-async function postWithAuth<T>(
-  path: string,
-  token: string,
-  options: PostOptions
-): Promise<T> {
+async function postWithAuth<T>(path: string, options: PostOptions): Promise<T> {
+  const token = useUserStore.getState().getToken();
+
   try {
     return await post<T>(path, {
       ...options,

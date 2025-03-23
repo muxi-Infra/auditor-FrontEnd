@@ -46,7 +46,7 @@ ProjectItem.displayName = 'ProjectItem';
 function Header({ menu }: { menu: ReactNode }) {
   const navigate = useNavigate();
   const { user } = useUserStore();
-  const { project } = useRouteStore();
+  const { project_id: project } = useRouteStore();
 
   return (
     <div className="grid h-16 w-full grid-cols-[4rem,20rem,auto,6rem,12rem] place-items-center bg-[#FFFFFF]">
