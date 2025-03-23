@@ -10,6 +10,7 @@ import { TestPagination } from './TestPagination';
 import { TestCalendar } from './TestCalendar';
 import { Input } from '@/components/ui/Input';
 import { SearchInput } from '@/components/SearchInput';
+import { TestDialog } from './TestDialog';
 
 export default function Page() {
   return (
@@ -44,6 +45,7 @@ export default function Page() {
       </div>
       <TestPagination></TestPagination>
       <TestCalendar></TestCalendar>
+      <TestDialog></TestDialog>
     </>
   );
 }
