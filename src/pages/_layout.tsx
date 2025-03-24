@@ -54,9 +54,10 @@ function Header({ menu }: { menu: ReactNode }) {
       <SearchInput className="w-72" />
       <div></div>
       <div className="grid h-full w-full grid-cols-2 place-items-center">
-        <Icon name="member" />
+        {user?.role === 2 && <Icon name="member" />}
         <Icon
           name="settings"
+          className="cursor-pointer"
           onClick={() => navigate(`/${project}/settings`)}
         />
       </div>

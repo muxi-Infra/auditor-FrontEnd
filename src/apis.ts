@@ -27,6 +27,10 @@ async function getProjectItems(project_id: number) {
   });
 }
 
+async function getItemDetail(item_id: number) {
+  return getWithAuth<Item>(`/api/v1/item/${item_id}/detail`);
+}
+
 async function getQiniuToken() {
   return getWithAuth<string>('/api/v1/tube/GetQiToken');
 }
@@ -37,5 +41,6 @@ export {
   updateMyInfo,
   getProjectList,
   getProjectItems,
+  getItemDetail,
   getQiniuToken,
 };

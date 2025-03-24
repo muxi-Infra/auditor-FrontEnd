@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/Table';
 import useRouteStore from '@/stores/route';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const mapStatusToVariant = (status: number): StatusProps['variant'] => {
   switch (status) {
@@ -80,7 +80,7 @@ const EntryList = () => {
             <span>时间</span>
           </TableHead>
           <TableHead className="text-center font-bold text-foreground">
-            <span>审核人</span>
+            <span>创建人</span>
           </TableHead>
           <TableHead className="text-center font-bold text-foreground">
             <span>标签</span>
@@ -97,17 +97,17 @@ const EntryList = () => {
               <Checkbox></Checkbox>
             </TableCell>
             <TableCell className="text-center">
-              <div className="flex flex-col gap-1">
+              <Link to={`${item.id}`} className="flex flex-col gap-1">
                 <div className="font-medium">{item.content.topic.title}</div>
                 <div className="text-muted-foreground text-sm">
                   {item.content.topic.content}
                 </div>
-              </div>
+              </Link>
             </TableCell>
             <TableCell className="text-center">
               {new Date(item.public_time).toLocaleDateString()}
             </TableCell>
-            <TableCell className="text-center">{item.auditor}</TableCell>
+            <TableCell className="text-center">{item.author}</TableCell>
             <TableCell className="text-center">
               <div className="flex flex-wrap items-center justify-center gap-1">
                 {item.tags.map((tag: string, index: number) => (
