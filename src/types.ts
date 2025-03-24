@@ -10,6 +10,13 @@ export interface Project {
   name: string;
 }
 
+export interface ProjectDetail {
+  total_number: number;
+  current_number: number;
+  api_key: string;
+  audit_rule: string;
+}
+
 export interface Item {
   id: number;
   author: string;

@@ -35,8 +35,10 @@ const Icon = React.forwardRef<SVGSVGElement, IconProps>(
       more: <More {...svgProps} ref={ref}></More>,
       menu: <Menu {...svgProps} ref={ref}></Menu>,
       search: <Search {...svgProps} ref={ref}></Search>,
-      member: <Member {...svgProps} ref={ref}></Member>,
-      settings: <Settings {...svgProps} ref={ref}></Settings>,
+      member: <Member {...svgProps} ref={ref} height={24} width={24}></Member>,
+      settings: (
+        <Settings {...svgProps} ref={ref} height={24} width={24}></Settings>
+      ),
       'chevron-left': <ChevronLeft {...svgProps} ref={ref}></ChevronLeft>,
       'chevron-right': <ChevronRight {...svgProps} ref={ref}></ChevronRight>,
     };

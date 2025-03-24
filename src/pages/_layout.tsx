@@ -13,7 +13,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/utils/style';
-import useRouteStore from '@/stores/route';
 import useProjectStore from '@/stores/project';
 import useUserStore from '@/stores/user';
 import { ComponentProps, ElementRef, ReactNode, forwardRef } from 'react';
@@ -46,7 +45,8 @@ ProjectItem.displayName = 'ProjectItem';
 function Header({ menu }: { menu: ReactNode }) {
   const navigate = useNavigate();
   const { user } = useUserStore();
-  const { project_id: project } = useRouteStore();
+  const location = useLocation();
+  const projectId = location.pathname.split('/')[1];
 
   return (
     <div className="grid h-16 w-full grid-cols-[4rem,20rem,auto,6rem,12rem] place-items-center bg-[#FFFFFF]">
@@ -58,7 +58,7 @@ function Header({ menu }: { menu: ReactNode }) {
         <Icon
           name="settings"
           className="cursor-pointer"
-          onClick={() => navigate(`/${project}/settings`)}
+          onClick={() => navigate(`/${projectId}/settings`)}
         />
       </div>
       <div className="grid h-full w-full grid-cols-[1fr,3fr] place-items-center">

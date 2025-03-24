@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/Table';
-import useRouteStore from '@/stores/route';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -29,7 +28,7 @@ const mapStatusToVariant = (status: number): StatusProps['variant'] => {
 };
 
 const EntryList = () => {
-  const { project_id } = useRouteStore();
+  const { project: project_id } = useParams();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +41,7 @@ const EntryList = () => {
 
     setLoading(true);
     setError(null);
-    getProjectItems(project_id)
+    getProjectItems(parseInt(project_id))
       .then((response) => {
         if (!response) {
           setItems([]);
@@ -126,15 +125,6 @@ const EntryList = () => {
 };
 
 export default function ProjectPage() {
-  const { project } = useParams();
-  const { setProject } = useRouteStore();
-
-  useEffect(() => {
-    if (project !== undefined) {
-      setProject(Number(project));
-    }
-  }, [project, setProject]);
-
   return (
     <>
       <EntryList />
