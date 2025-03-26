@@ -17,6 +17,8 @@ import useProjectStore from '@/stores/project';
 import useUserStore from '@/stores/user';
 import { ComponentProps, ElementRef, ReactNode, forwardRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { CreateProjectDialog } from '@/components/CreateProjectDialog';
+import { Separator } from '@/components/ui/Separator';
 
 // ProjectItem 组件
 const ProjectItem = forwardRef<
@@ -53,8 +55,12 @@ function Header({ menu }: { menu: ReactNode }) {
       {menu}
       <SearchInput className="w-72" />
       <div></div>
-      <div className="grid h-full w-full grid-cols-2 place-items-center">
-        {user?.role === 2 && <Icon name="member" />}
+      <div className="flex h-full w-full items-center justify-center gap-2">
+        {user?.role === 2 && (
+          <>
+            <Icon name="member" /> <Separator orientation="vertical" />
+          </>
+        )}
         <Icon
           name="settings"
           className="cursor-pointer"
@@ -100,6 +106,7 @@ function AppSidebar() {
               {project.name}
             </ProjectItem>
           ))}
+          <CreateProjectDialog></CreateProjectDialog>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="flex h-16 flex-row items-center justify-start px-6">

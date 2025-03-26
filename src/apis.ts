@@ -36,7 +36,7 @@ async function getItemDetail(item_id: number) {
 }
 
 async function auditItem(item_id: number, reason: string, status: 0 | 1 | 2) {
-  return postWithAuth<null>(`/api/v1/item/${item_id}/audit`, {
+  return postWithAuth<null>(`/api/v1/item/audit`, {
     body: {
       item_id: item_id,
       reason: reason,

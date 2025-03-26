@@ -4,6 +4,7 @@ import Circle from '@/assets/icons/circle.svg?react';
 import Cross from '@/assets/icons/cross.svg?react';
 import More from '@/assets/icons/more.svg?react';
 import Menu from '@/assets/icons/menu.svg?react';
+import Plus from '@/assets/icons/plus.svg?react';
 import Search from '@/assets/icons/search.svg?react';
 import Member from '@/assets/icons/member.svg?react';
 import Settings from '@/assets/icons/settings.svg?react';
@@ -18,6 +19,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
     | 'cross'
     | 'more'
     | 'menu'
+    | 'plus'
     | 'chevron-left'
     | 'chevron-right'
     | 'search'
@@ -34,6 +36,7 @@ const Icon = React.forwardRef<SVGSVGElement, IconProps>(
       cross: <Cross {...svgProps} ref={ref}></Cross>,
       more: <More {...svgProps} ref={ref}></More>,
       menu: <Menu {...svgProps} ref={ref}></Menu>,
+      plus: <Plus {...svgProps} ref={ref}></Plus>,
       search: <Search {...svgProps} ref={ref}></Search>,
       member: <Member {...svgProps} ref={ref} height={24} width={24}></Member>,
       settings: (
