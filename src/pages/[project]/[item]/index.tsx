@@ -1,25 +1,24 @@
 import { TagCheckbox } from '@/components/Tag';
 import { StatusButton } from '@/components/Status';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
-import { useParams } from 'react-router-dom';
 import { auditItem, getItemDetail } from '@/apis';
 import { Item } from '@/types';
 import { useEffect, useState } from 'react';
 import { ImageButton } from '@/components/ImageButton';
 import { Textarea } from '@/components/ui/Textarea';
+import { useRoute } from '@/hooks/route';
 
 export default function EntryPage() {
-  const { item } = useParams();
+  const { itemId } = useRoute();
   const [itemData, setItemData] = useState<Item>();
   const [imgIndex, setImgIndex] = useState(0);
   const [reason, setReason] = useState('');
 
   useEffect(() => {
-    if (item) {
-      const itemId = parseInt(item);
+    if (itemId) {
       getItemDetail(itemId).then(setItemData);
     }
-  }, [item]);
+  }, [itemId]);
 
   const handleAudit = (status: 0 | 1 | 2) => {
     if (!itemData) return;

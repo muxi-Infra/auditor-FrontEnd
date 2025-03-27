@@ -1,4 +1,3 @@
-import { getMyInfo } from '@/apis';
 import { User } from '@/types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -6,11 +5,10 @@ import { persist } from 'zustand/middleware';
 interface UserStore {
   user: User | null;
   token: string | null;
-  updateUser: (updates: Partial<User>) => void;
+  updateUser: (updates: User) => void;
   getToken: () => string | null;
   setToken: (token: string) => void;
   logout: () => void;
-  isLoggedIn: () => boolean;
 }
 
 const useUserStore = create<UserStore>()(
@@ -18,7 +16,7 @@ const useUserStore = create<UserStore>()(
     (set, get) => ({
       user: null,
       token: null,
-      updateUser: (updates: Partial<User>) =>
+      updateUser: (updates: User) =>
         set((state) => ({
           user: {
             ...updates,
@@ -28,14 +26,6 @@ const useUserStore = create<UserStore>()(
       getToken: () => get().token,
       setToken: (token: string) => set({ token }),
       logout: () => set({ user: null, token: null }),
-      isLoggedIn: () => {
-        try {
-          getMyInfo();
-          return true;
-        } catch {
-          return false;
-        }
-      },
     }),
     {
       name: 'user-storage',

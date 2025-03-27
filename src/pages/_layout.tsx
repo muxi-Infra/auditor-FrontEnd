@@ -19,6 +19,7 @@ import { ComponentProps, ElementRef, ReactNode, forwardRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CreateProjectDialog } from '@/components/CreateProjectDialog';
 import { Separator } from '@/components/ui/Separator';
+import { useNavigateToProject } from '@/hooks/navigate';
 
 // ProjectItem 组件
 const ProjectItem = forwardRef<
@@ -45,7 +46,7 @@ ProjectItem.displayName = 'ProjectItem';
 
 // Header 组件
 function Header({ menu }: { menu: ReactNode }) {
-  const navigate = useNavigate();
+  const { toProjectSettings } = useNavigateToProject();
   const { user } = useUserStore();
   const location = useLocation();
   const projectId = location.pathname.split('/')[1];
@@ -64,7 +65,7 @@ function Header({ menu }: { menu: ReactNode }) {
         <Icon
           name="settings"
           className="cursor-pointer"
-          onClick={() => navigate(`/${projectId}/settings`)}
+          onClick={() => projectId && toProjectSettings(parseInt(projectId))}
         />
       </div>
       <div className="grid h-full w-full grid-cols-[1fr,3fr] place-items-center">

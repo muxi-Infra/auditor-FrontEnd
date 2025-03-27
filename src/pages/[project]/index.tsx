@@ -12,7 +12,8 @@ import {
   TableRow,
 } from '@/components/ui/Table';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useRoute } from '@/hooks/route';
 
 const mapStatusToVariant = (status: number): StatusProps['variant'] => {
   switch (status) {
@@ -28,20 +29,20 @@ const mapStatusToVariant = (status: number): StatusProps['variant'] => {
 };
 
 const EntryList = () => {
-  const { project: project_id } = useParams();
+  const { projectId } = useRoute();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!project_id) {
+    if (!projectId) {
       setError('No project selected');
       return;
     }
 
     setLoading(true);
     setError(null);
-    getProjectItems(parseInt(project_id))
+    getProjectItems(projectId)
       .then((response) => {
         if (!response) {
           setItems([]);
@@ -51,7 +52,7 @@ const EntryList = () => {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [project_id]);
+  }, [projectId]);
 
   if (loading) {
     return <div className="py-4 text-center">Loading...</div>;

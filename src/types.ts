@@ -3,6 +3,7 @@ export interface User {
   email?: string;
   name?: string;
   role?: number;
+  id: number;
 }
 
 export interface Project {
@@ -24,13 +25,11 @@ export interface Item {
   status: number;
   public_time: number;
   auditor: number;
-  content: ItemContent;
-}
-
-export interface ItemContent {
-  topic: { title: string } & Comment;
-  last_comment: Comment;
-  next_comment: Comment;
+  content: {
+    topic: { title: string } & Comment;
+    last_comment: Comment;
+    next_comment: Comment;
+  };
 }
 
 export interface Comment {

@@ -2,23 +2,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Progress } from '@/components/ui/Progress';
 import { getProjectDetail } from '@/apis';
-import { useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import useProjectStore from '@/stores/project';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { ProjectDetail } from '@/types';
 
 export default function Settings() {
-  const location = useLocation();
-  const { projectDetail, setProjectDetail } = useProjectStore();
+  const { project: projectId } = useParams();
+  const [projectDetail, setProjectDetail] = useState<ProjectDetail>();
 
   useEffect(() => {
     const fetchProject = async () => {
-      const projectId = location.pathname.split('/')[1];
       if (!projectId) return;
       const detail = await getProjectDetail(Number(projectId));
       setProjectDetail(detail);
     };
     fetchProject();
-  }, [location.pathname, setProjectDetail]);
+  }, [projectId]);
 
   return (
     <div className="flex w-full flex-col gap-8">
