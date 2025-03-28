@@ -23,6 +23,7 @@ export default function Login() {
 
       try {
         const token = await login(code);
+        if (token === '') return;
         console.log(token);
         setToken(token);
 
@@ -52,5 +53,5 @@ export default function Login() {
     return <div>Error: {error}</div>;
   }
 
-  return <div>Login</div>;
+  return <div>权限待审核</div>;
 }
