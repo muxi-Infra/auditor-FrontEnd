@@ -6,6 +6,14 @@ import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://60.205.12.92:8080',
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [
     react(),
     Pages({

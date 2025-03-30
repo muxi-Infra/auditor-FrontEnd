@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,html,json}\"",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.2",
@@ -53,6 +54,7 @@
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5",
     "vite-plugin-pages": "^0.32.4",
-    "vite-plugin-svgr": "^4.3.0"
+    "vite-plugin-svgr": "^4.3.0",
+    "vitest": "^3.0.8"
   }
 }

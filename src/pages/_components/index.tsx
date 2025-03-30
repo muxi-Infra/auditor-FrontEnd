@@ -10,6 +10,8 @@ import { TestPagination } from './TestPagination';
 import { TestCalendar } from './TestCalendar';
 import { Input } from '@/components/ui/Input';
 import { SearchInput } from '@/components/SearchInput';
+import { TestDialog } from './TestDialog';
+import { Progress } from '@/components/ui/Progress';
 
 export default function Page() {
   return (
@@ -41,9 +43,11 @@ export default function Page() {
           containerClassName="w-64"
           action={(value) => alert(value)}
         />
+        <Progress value={80}></Progress>
       </div>
       <TestPagination></TestPagination>
       <TestCalendar></TestCalendar>
+      <TestDialog></TestDialog>
     </>
   );
 }

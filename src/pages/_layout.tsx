@@ -13,10 +13,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/utils/style';
-import useRouteStore from '@/store/useRouteStore';
-import useUserStore from '@/store/useUserStore';
+import useProjectStore from '@/stores/project';
+import useUserStore from '@/stores/user';
 import { ComponentProps, ElementRef, ReactNode, forwardRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { CreateProjectDialog } from '@/components/CreateProjectDialog';
+import { Separator } from '@/components/ui/Separator';
+import { useNavigateToProject } from '@/hooks/navigate';
 
 // ProjectItem 组件
 const ProjectItem = forwardRef<
@@ -43,29 +46,36 @@ ProjectItem.displayName = 'ProjectItem';
 
 // Header 组件
 function Header({ menu }: { menu: ReactNode }) {
-  const navigate = useNavigate();
-  const { name } = useUserStore();
-  const { project } = useRouteStore();
+  const { toProjectSettings } = useNavigateToProject();
+  const { user } = useUserStore();
+  const location = useLocation();
+  const projectId = location.pathname.split('/')[1];
 
   return (
     <div className="grid h-16 w-full grid-cols-[4rem,20rem,auto,6rem,12rem] place-items-center bg-[#FFFFFF]">
       {menu}
       <SearchInput className="w-72" />
       <div></div>
-      <div className="grid h-full w-full grid-cols-2 place-items-center">
-        <Icon name="member" />
+      <div className="flex h-full w-full items-center justify-center gap-2">
+        {user?.role === 2 && (
+          <>
+            <Icon name="member" /> <Separator orientation="vertical" />
+          </>
+        )}
         <Icon
           name="settings"
-          onClick={() => navigate(`/${project}/settings`)}
+          className="cursor-pointer"
+          onClick={() => projectId && toProjectSettings(parseInt(projectId))}
         />
       </div>
       <div className="grid h-full w-full grid-cols-[1fr,3fr] place-items-center">
         <Avatar className="size-10">
-          <AvatarImage src="https://www.booling.cn/assets/avatar-bf4f5557.webp" />
+          {/* <AvatarImage src="https://www.booling.cn/assets/avatar-bf4f5557.webp" /> */}
+          <AvatarImage src={user?.avatar} />
           <AvatarFallback>瑜伽</AvatarFallback>
         </Avatar>
         <div className="flex h-full w-full flex-col items-start justify-center p-2">
-          <div className="text-md font-bold">{name}</div>
+          <div className="text-md font-bold">{user?.name}</div>
           <div className="text-muted-foreground text-[0.8rem]">
             非常擅长瑜伽
           </div>
@@ -75,15 +85,9 @@ function Header({ menu }: { menu: ReactNode }) {
   );
 }
 
-// AppSidebar 组件
-const projects = [
-  { name: '华师匣子', path: '/ccnubox' },
-  { name: '木犀课栈', path: '/kstack' },
-  { name: '茶馆', path: '/forum' },
-];
-
 function AppSidebar() {
   const navigate = useNavigate();
+  const { projects } = useProjectStore();
   return (
     <Sidebar className="bg-[#ffffff]">
       <SidebarHeader className="h-16">
@@ -96,13 +100,14 @@ function AppSidebar() {
         <SidebarMenu>
           {projects.map((project) => (
             <ProjectItem
-              key={project.path}
-              path={project.path}
-              onClick={() => navigate(project.path)}
+              key={project.id}
+              path={`/${project.id}`}
+              onClick={() => navigate(`/${project.id}`)}
             >
               {project.name}
             </ProjectItem>
           ))}
+          <CreateProjectDialog></CreateProjectDialog>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="flex h-16 flex-row items-center justify-start px-6">
