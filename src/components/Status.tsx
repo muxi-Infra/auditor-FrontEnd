@@ -68,6 +68,13 @@ const statusButtonVariants = cva(
         pagination:
           'bg-[#FFEECF] hover:bg-[#FFE1B1] active:bg-[#FFD596] text-[#AF6600] shadow h-8 px-4 py-2 w-32 rounded-xl',
         ai: 'bg-[#F9C640] hover:bg-[#F8BD20] active:bg-[#F7B508] text-white shadow h-8 px-4 py-2 w-32 rounded-xl',
+           time:' rounded-md text-black h-10 w-28 border-2 w-40 h-8',
+        edit: 'rounded-xl border-2 border-[#FFC886] text-[#FFC886] w-14 shadow-none',
+        save:'rounded-xl border-2 border-[#F33636] text-[#F33636] w-14 shadow-none',
+        add:'rounded-md w-20 bg-[#F29E26] h-7 text-white',
+        toaudit:'rounded-md  bg-[#ccf0eb] text-[#00B69B] w-24 text-[14px]',
+        tomange:'rounded-md bg-[#e0d4fc] w-24 text-[#6226EF] text-[14px]',
+        delete:'rounded-md bg-[#fccfcf] w-24 text-[#F20E0E] text-[14px]'
       },
     },
     defaultVariants: {
@@ -111,6 +118,9 @@ const statusVariants = cva(
           'bg-[#FFEECF] text-foreground h-10 w-28 rounded-md text-md font-semibold',
         pagination: 'bg-[#FFEECF] text-[#AF6600]',
         ai: 'bg-[#F9C640] text-white',
+        audit:'rounded-md  bg-[#ccf0eb] text-[#00B69B] w-24 text-[14px]',
+        mange:'rounded-md bg-[#e0d4fc] w-24 text-[#6226EF] text-[14px]',
+       
       },
     },
     defaultVariants: {

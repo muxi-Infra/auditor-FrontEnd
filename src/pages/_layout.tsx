@@ -20,6 +20,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CreateProjectDialog } from '@/components/CreateProjectDialog';
 import { Separator } from '@/components/ui/Separator';
 import { useNavigateToProject } from '@/hooks/navigate';
+import AdvaceFilter from '@/components/AdvanceFilter';
+import { getProjectItems,getProjectItemsBySearch } from '@/apis';
+import useItemStore from '@/stores/items';
+import { error } from 'console';
+import { useState } from 'react';
+
 
 // ProjectItem 组件
 const ProjectItem = forwardRef<
@@ -48,13 +54,32 @@ ProjectItem.displayName = 'ProjectItem';
 function Header({ menu }: { menu: ReactNode }) {
   const { toProjectSettings } = useNavigateToProject();
   const { user } = useUserStore();
+  const { setItems }=useItemStore();
   const location = useLocation();
   const projectId = location.pathname.split('/')[1];
+  const [error,setError]=useState<string|null>(null);
 
+  
+  const handleSearch=(value:string,projectId:number)=>{
+         console.log(value);
+        
+         getProjectItemsBySearch({query:value,project_id:+projectId}).then(
+          (response)=>{
+            if(!response){
+              setItems([])
+              return;
+            }
+            console.log(response);
+            setItems(response);
+          }
+         ).catch(
+          (err)=>setError(err.message)
+         )
+  }
   return (
     <div className="grid h-16 w-full grid-cols-[4rem,20rem,auto,6rem,12rem] place-items-center bg-[#FFFFFF]">
       {menu}
-      <SearchInput className="w-72" />
+      <SearchInput className="w-72" action={(value)=>handleSearch(value,projectId as unknown as number)}/>
       <div></div>
       <div className="flex h-full w-full items-center justify-center gap-2">
         {user?.role === 2 && (
@@ -88,6 +113,7 @@ function Header({ menu }: { menu: ReactNode }) {
 function AppSidebar() {
   const navigate = useNavigate();
   const { projects } = useProjectStore();
+  const item_id=location.pathname.split('/')[2];
   return (
     <Sidebar className="bg-[#ffffff]">
       <SidebarHeader className="h-16">
@@ -110,8 +136,8 @@ function AppSidebar() {
           <CreateProjectDialog></CreateProjectDialog>
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="flex h-16 flex-row items-center justify-start px-6">
-        <LargeToggle></LargeToggle>
+      <SidebarFooter className="flex h-82 flex-row items-center justify-start px-4">
+        {item_id?<></>:<AdvaceFilter></AdvaceFilter>}
       </SidebarFooter>
     </Sidebar>
   );
@@ -124,7 +150,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <AppSidebar />
       <main className="grid w-full grid-rows-[4rem,auto]">
         <Header menu={<SidebarTrigger className="size-10" />} />
-        <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-center p-8">
+        <div className="mx-auto flex h-full w-full max-w-[1200px] items-start justify-center p-8">
           {children}
         </div>
       </main>
