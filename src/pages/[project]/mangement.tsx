@@ -6,11 +6,13 @@ import useProjectStore from '@/stores/project';
 import { useNavigateToProject } from '@/hooks/navigate';
 import { StatusButton } from '@/components/Status';
 import { getProjectDetail } from '@/apis';
-import { ProjectDetail, UpdateProject, Member,ProjectRole } from '@/types';
-import { updateProject, getAllMembers } from '@/apis';
+import { ProjectDetail, UpdateProject, Member, ProjectRole } from '@/types';
+import { updateProject, getAllMembers, giveProjectRole,deleteUsers } from '@/apis';
 import UserCard from '@/components/Usercard';
 import { Separator } from '@/components/ui/Separator';
 import { Checkbox } from '@/components/ui/Checkbox';
+import { AddDialog } from '../_components/AddDialog';
+import { DeleteDialog } from '../_components/DeleteDialog';
 
 export default function Mangement() {
   const project_id = +location.pathname.split('/')[1];
@@ -33,12 +35,12 @@ export default function Mangement() {
   });
   const [memberStatus, setMemberStatus] = useState<string>('view');
   const [members, setMembers] = useState<Member[]>([]);
-  const [projectRole,setProjectRole]=useState<ProjectRole[]>([])
-  const [api_key, setApi_key]=useState<string>('');
+  const [projectRole, setProjectRole] = useState<ProjectRole[]>([]);
+  const [deleteIds,setDeleteIds] = useState<number[]>([])
   React.useEffect(() => {
     const fetchProject = async () => {
       if (!project_id) return;
-      const detail = await getProjectDetail(Number(project_id))
+      const detail = await getProjectDetail(Number(project_id));
       setProjectDetail(detail);
     };
     const fetchMembers = async () => {
@@ -48,7 +50,6 @@ export default function Mangement() {
     };
     fetchProject();
     fetchMembers();
-   
   }, [project_id]);
   const handleDeleteProject = (project_id: number) => {
     deleteProject(project_id).then((_response) => {
@@ -65,7 +66,7 @@ export default function Mangement() {
   };
   const handleEditMember = () => {
     setMemberStatus('edit');
-    console.log(members)
+    console.log(members);
   };
   const handleSaveProject = () => {
     updateProject(project_id, updatedProject).then((_response) => {
@@ -79,55 +80,91 @@ export default function Mangement() {
       });
     });
   };
-  const handleMemberBoxChange = (role:ProjectRole)=>{
-      setProjectRole( prev  =>{
-         const currentIndex = prev.findIndex(item => item.user_id === role.user_id);
-         if(currentIndex>-1){
-            return prev.filter(i => i.user_id !== role.user_id)
-         }else{
-            return [...prev,{project_role:role.project_role,user_id:role.user_id}]
-         }
+  const handleMemberBoxChange = (role: ProjectRole) => {
+    setProjectRole((prev) => {
+      const currentIndex = prev.findIndex(
+        (item) => item.user_id === role.user_id
+      );
+      if (currentIndex > -1) {
+        return prev.filter((i) => i.user_id !== role.user_id);
+      } else {
+        return [
+          ...prev,
+          { project_role: role.project_role, user_id: role.user_id },
+        ];
+      }
+    });
+  };
+  const handleChangeRole = (project_role: number) => {
+    console.log(projectRole);
 
-      }    )
-     
-  }
-  const handleChangeRole=(project_role:number)=>{
-    console.log(projectRole)
-       
-        setProjectRole(prev =>{
-            return prev.map( member => ({
-                     ...member,
-                     project_role:project_role
-            }))
-        })
-         setMembers(prev =>
-           prev.map(member => {
-             const matchedRole = projectRole.some(role => role.user_id === member.id);
-             if (matchedRole) {
-                return {
-                  ...member,
-                  project_role:project_role, // 更新角色
-                 };
-                  }
-                 return member; // 保持不变
-                 })
-                 );
-       
-  }
-  const handleSelectAll = (checked:boolean)=>{
-    if(checked){
-       setProjectRole([])
-    }else{
-     const roles = members.map(i =>{
-        return {project_role:i.project_role,user_id:i.id}
-     } )
-    setProjectRole(roles as unknown as ProjectRole[])
+    setProjectRole((prev) => {
+      return prev.map((member) => ({
+        ...member,
+        project_role: project_role,
+      }));
+    });
+    setMembers((prev) =>
+      prev.map((member) => {
+        const matchedRole = projectRole.some(
+          (role) => role.user_id === member.id
+        );
+        if (matchedRole) {
+          return {
+            ...member,
+            project_role: project_role, // 更新角色
+          };
+        }
+        return member; // 保持不变
+      })
+    );
+  };
+  const handleDeleteMember = () => {
+    const deletedIds = members
+    .filter((member) => {
+      const matchedRole = projectRole.some(
+        (role) => role.user_id === member.id
+      );
+      return matchedRole; //
+    })
+    .map((member) => member.id);
+    setDeleteIds(deletedIds)
+    setMembers((prev) =>
+      prev.filter((member) => {
+        const matchedRole = projectRole.some(
+          (role) => role.user_id === member.id
+        );
+        return !matchedRole;
+      })
+    );
+    setProjectRole([]);
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setProjectRole([]);
+    } else {
+      const roles = members.map((i) => {
+        return { project_role: i.project_role, user_id: i.id };
+      });
+      setProjectRole(roles as unknown as ProjectRole[]);
     }
-   
-  }
-  const handleSaveProjectRole = () =>{
-        //明天写请求体孩子们
-  }
+  };
+  const handleSaveProjectRole = () => {
+        console.log(deleteIds)
+        giveProjectRole(projectRole,projectDetail?.api_key)
+        deleteUsers(deleteIds,projectDetail?.api_key)
+        setMemberStatus("view")
+  };
+ const handleSecondgetMembers = () => {
+        const fetchMembers = async () => {
+      if (!project_id) return;
+      const member = await getAllMembers(Number(project_id));
+      setMembers(member);
+    };
+    fetchMembers();
+ }  
+
   return (
     <div className="grid w-full grid-rows-2 gap-4">
       <Card>
@@ -230,11 +267,8 @@ export default function Mangement() {
           <CardTitle className="text-3xl">成员管理</CardTitle>
           {memberStatus === 'edit' ? (
             <div className="flex gap-2">
-              <StatusButton variant="add" className="flex gap-0">
-                <p className="bg-red mb-1 text-3xl">+</p>
-                <p>新增</p>
-              </StatusButton>
-              <StatusButton variant="save">保存</StatusButton>
+              <AddDialog setOutMembers={handleSecondgetMembers} projectId={project_id}  projectMembers={members} api_key={projectDetail?.api_key}></AddDialog>
+              <StatusButton variant="save" onClick={handleSaveProjectRole}>保存</StatusButton>
             </div>
           ) : (
             <div>
@@ -282,17 +316,34 @@ export default function Mangement() {
             <div className="grid grid-rows-1">
               <div className="mb-5 flex flex-row gap-6">
                 <div className="ml-5 mt-2 flex flex-row gap-1">
-                  <Checkbox checked={projectRole.length === members.length} onClick={()=>handleSelectAll(projectRole.length === members.length)}></Checkbox>
+                  <Checkbox
+                    checked={projectRole.length === members.length}
+                    onClick={() =>
+                      handleSelectAll(projectRole.length === members.length)
+                    }
+                  ></Checkbox>
                   <p className="font-bold">全选</p>
                 </div>
                 <div className="ml-5 mt-1 flex flex-row gap-3">
-                  <StatusButton variant="toaudit" className="h-8" onClick={()=>handleChangeRole(0)}>
+                  <StatusButton
+                    variant="toaudit"
+                    className="h-8"
+                    onClick={() => handleChangeRole(0)}
+                  >
                     设为审核员
                   </StatusButton>
-                  <StatusButton variant="tomange" className="h-8" onClick={()=>handleChangeRole(1)}>
+                  <StatusButton
+                    variant="tomange"
+                    className="h-8"
+                    onClick={() => handleChangeRole(1)}
+                  >
                     设为管理员
                   </StatusButton>
-                  <StatusButton variant="delete" className="h-8">
+                  <StatusButton
+                    variant="delete"
+                    className="h-8"
+                    onClick={() => handleDeleteMember()}
+                  >
                     删除
                   </StatusButton>
                 </div>
@@ -301,13 +352,23 @@ export default function Mangement() {
                 {members.map((member) => {
                   return (
                     <div className="flex w-full flex-row items-center justify-center">
-                      <Checkbox checked={projectRole.some(i=>i.user_id === member.id)} onClick={()=>handleMemberBoxChange({user_id:member.id,project_role:member.project_role})}></Checkbox>
+                      <Checkbox
+                        checked={projectRole.some(
+                          (i) => i.user_id === member.id
+                        )}
+                        onClick={() =>
+                          handleMemberBoxChange({
+                            user_id: member.id,
+                            project_role: member.project_role,
+                          })
+                        }
+                      ></Checkbox>
                       <UserCard
                         key={member.id}
                         className="w-[94%] grid-cols-[15%_75%_10%]"
                         avatar={member.avatar}
                         name={member.name}
-                        role={ member.project_role}
+                        role={member.project_role}
                         description={member.email}
                       ></UserCard>
                     </div>
@@ -318,11 +379,8 @@ export default function Mangement() {
           )}
         </CardContent>
       </Card>
-      <Card onClick={() => handleDeleteProject(project_id)}>
-        <CardContent className="flex w-full items-center justify-center p-2">
-          <p className="text-xl text-[#FF0404]">删除项目</p>
-        </CardContent>
-      </Card>
+      <DeleteDialog handleDelete={() => handleDeleteProject(project_id)}></DeleteDialog>
+      
     </div>
   );
 }
