@@ -5,7 +5,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+
   DialogTrigger,
 } from '@/components/ui/Dialog';
 import { useState } from 'react'
@@ -37,7 +37,7 @@ export function TestDialog({
   uploadImage(avatarFile)
     .then((res) => {
       setUserAvatar(res); 
-      console.log(res)
+      console.log(userAvatar)
        updateUser({
         ...user,
         name: userName,

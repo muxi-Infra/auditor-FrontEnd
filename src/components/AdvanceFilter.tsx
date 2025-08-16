@@ -1,8 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from './ui/Card';
@@ -24,7 +22,7 @@ export default function AdvaceFilter() {
     {} as DateRange
   );
   const [tags,setTags]=React.useState<string[]>([])
-   const { items,originalItems,setItems }=useItemStore();
+   const {setItems}=useItemStore();
   const [filter,setFilter]=React.useState<FilterBody>({
     tags:[],
     auditors:[],

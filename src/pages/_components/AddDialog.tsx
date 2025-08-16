@@ -13,7 +13,7 @@ import { useState,useEffect } from 'react';
 import { SearchInput } from '@/components/SearchInput';
 import UserCard from '@/components/Usercardp';
 import { User,ProjectRole } from '@/types';
-import { getAllUsers,addUsers,getProjectItemsBySearch,selectUser } from '@/apis';
+import { getAllUsers,addUsers,selectUser } from '@/apis';
 
 
 interface AddDialogProps {
@@ -23,7 +23,7 @@ interface AddDialogProps {
   projectId:number;
   setOutMembers?: () => void;
 }
-export function AddDialog({api_key,projectMembers,projectId,setOutMembers}:AddDialogProps) {
+export function AddDialog({api_key,projectMembers,setOutMembers}:AddDialogProps) {
   const [open, setOpen] = useState(false);
   const [members,setMembers] = useState<User[]>([])
   const [addMembers,setAddMembers] = useState<ProjectRole[]>([])
