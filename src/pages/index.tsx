@@ -2,14 +2,20 @@ import { getMyInfo, getProjectList } from '@/apis';
 import { useNavigateToProject } from '@/hooks/navigate';
 import useProjectStore from '@/stores/project';
 import { useEffect, useState } from 'react';
-
+import useUserStore from '@/stores/user';
 export default function Page() {
   const { setProjects } = useProjectStore();
   const [isChecking, setIsChecking] = useState(true);
   const { toProject } = useNavigateToProject();
-
+ const {updateUser,user} = useUserStore();
   useEffect(() => {
-    getMyInfo()
+    getMyInfo().then((res)=>{
+      console.log(res);
+      updateUser({
+        ...res
+      })
+      console.log(user)
+    })
       .then(() => {
         getProjectList().then((projectList) => {
           setProjects(projectList);

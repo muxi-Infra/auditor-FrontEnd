@@ -9,7 +9,7 @@ export default function Login() {
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { updateUser, setToken } = useUserStore();
+  const { updateUser, setToken ,user } = useUserStore();
 
   useEffect(() => {
     const handleLogin = async () => {
@@ -29,6 +29,7 @@ export default function Login() {
 
         const userInfo = await getMyInfo();
         updateUser({ ...userInfo });
+        
         navigate('/');
       } catch (err) {
         if (err instanceof Error) {

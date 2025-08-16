@@ -25,8 +25,9 @@ import { getProjectItems,getProjectItemsBySearch } from '@/apis';
 import useItemStore from '@/stores/items';
 import { error } from 'console';
 import { useState } from 'react';
+import { TestDialog } from './_components/TestDialog';
 
-
+const DEFAULT_AVATAR = '../src/assets/icons/user.png';
 // ProjectItem 组件
 const ProjectItem = forwardRef<
   ElementRef<typeof SidebarMenuItem>,
@@ -61,15 +62,15 @@ function Header({ menu }: { menu: ReactNode }) {
 
   
   const handleSearch=(value:string,projectId:number)=>{
-         console.log(value);
         
-         getProjectItemsBySearch({query:value,project_id:+projectId}).then(
+        
+         getProjectItemsBySearch({query:value},+projectId).then(
           (response)=>{
             if(!response){
               setItems([])
               return;
             }
-            console.log(response);
+           
             setItems(response);
           }
          ).catch(
@@ -82,11 +83,10 @@ function Header({ menu }: { menu: ReactNode }) {
       <SearchInput className="w-72" action={(value)=>handleSearch(value,projectId as unknown as number)}/>
       <div></div>
       <div className="flex h-full w-full items-center justify-center gap-2">
-        {user?.role === 2 && (
-          <>
-            <Icon name="member" /> <Separator orientation="vertical" />
-          </>
-        )}
+       <>
+       <TestDialog avatarUrl={user?.avatar} placeholderName={user?.name as string}></TestDialog><Separator orientation="vertical" />
+       </>
+         
         <Icon
           name="settings"
           className="cursor-pointer"
@@ -102,7 +102,7 @@ function Header({ menu }: { menu: ReactNode }) {
         <div className="flex h-full w-full flex-col items-start justify-center p-2">
           <div className="text-md font-bold">{user?.name}</div>
           <div className="text-muted-foreground text-[0.8rem]">
-            非常擅长瑜伽
+             {user?.email}
           </div>
         </div>
       </div>
