@@ -1,9 +1,9 @@
 export interface User {
-  avatar?: string;
+  avatar?: string | undefined;
   email?: string;
-  name?: string;
+  name?: string | undefined;
   role?: number;
-  id: number;
+  id?: number | undefined;
 }
 
 export interface Member{
@@ -49,7 +49,7 @@ export interface Comment {
 }
 
 export interface SearchBody {
-  project_id: number;
+  project_id?: number;
   query:string;
 }
 
