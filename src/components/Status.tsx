@@ -108,6 +108,7 @@ const statusVariants = cva(
   {
     variants: {
       variant: {
+        space: 'bg-white text-black',
         pass: 'bg-[#3A9D18] text-[#CFFFBE]',
         pending: 'bg-[#D9D9D9] text-foreground',
         reject: 'bg-[#E75E1A] text-[#FBF5E2]',
@@ -124,7 +125,7 @@ const statusVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'pass',
+      variant: 'space',
     },
   }
 );
