@@ -13,7 +13,7 @@ async function getMyInfo() {
   return getWithAuth<User>('/api/v1/user/getMyInfo');
 }
 
-async function updateMyInfo() {}
+
 
 async function getProjectList() {
   return getWithAuth<Project[]>('/api/v1/project/getProjectList');
@@ -46,10 +46,10 @@ async function getProjectItems(project_id: number) {
     },
   });
 }
-async function getProjectItemsBySearch(search: SearchBody){
+async function getProjectItemsBySearch(search: SearchBody,project_id?:number){
   return postWithAuth<Item[]>('/api/v1/item/select', {
     body:{
-      project_id: search.project_id,
+       ...(project_id ? { project_id } : {}),
       query: search.query,
     
     }
@@ -140,7 +140,38 @@ async function giveProjectRole(updateMember:ProjectRole[],api_key:string){
   },api_key)
 }
 
-export {
+async function deleteUsers(delete_users:number[],api_key:string){
+  
+  return await delWithAuth<number[]>(`/api/v1/project/deleteUsers`,{
+    body:{
+      ids:delete_users
+    }
+  },api_key)
+}
+async function updateMyInfo(avatar: string, name: string | undefined){
+   return await postWithAuth<null>('/api/v1/user/updateMyInfo',{
+      body:{
+        avatar,
+        name
+    }
+  }
+   )
+}
+
+async function addUsers(members:ProjectRole[],api_key:string){
+  return await postWithAuth<null>('/api/v1/project/addUsers',{
+    body:{
+      add_users:members
+}
+},api_key)}
+async function getAllUsers(the_query:string = '',page:number = 1,pageSize:number=30){
+  return await getWithAuth<User[]>(`/api/v1/user/getUsers?the_query=${the_query}&page=${page}&pageSize=${pageSize}`)
+}
+
+async function selectUser(the_query:string,api_key:string){
+  return await getWithAuth<User[]>(`/api/v1/project/selectUser?the_query=${the_query}`,api_key)
+}
+export  {
   login,
   getMyInfo,
   updateMyInfo,
@@ -159,5 +190,9 @@ export {
   getAllMembers,
   deleteProject,
   updateProject,
-  giveProjectRole
+  giveProjectRole,
+  deleteUsers,
+  getAllUsers,
+  addUsers,
+  selectUser,
 };
