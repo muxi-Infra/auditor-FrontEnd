@@ -15,9 +15,14 @@ import useItemStore from '@/stores/items';
 import { Separator } from './ui/Separator';
 import { getAllTags,getProjectItemsByFilter,getAllMembers } from '@/apis';
 import { FilterBody,Member } from '@/types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar } from './ui/Calendar';
+import { DateRange } from 'react-day-picker';
 export default function AdvaceFilter() { 
   const project_id = +location.pathname.split('/')[1];
-  
+  const [date, setDate] = React.useState<DateRange | undefined>(
+    {} as DateRange
+  );
   const [tags,setTags]=React.useState<string[]>([])
    const { items,originalItems,setItems }=useItemStore();
   const [filter,setFilter]=React.useState<FilterBody>({
@@ -27,6 +32,7 @@ export default function AdvaceFilter() {
     statuses:[]
   })
   const [members,setMembers]=React.useState<Member[]>([])
+  const [calenderOpen,setCalenderOpen]=React.useState<boolean>(false);
   React.useEffect(()=>{
     getProjectItemsByFilter({project_id,...filter}).then((response)=>{
       setItems(response);
@@ -40,6 +46,7 @@ export default function AdvaceFilter() {
         round_time:[],
         statuses:[]
       })
+      setDate({} as DateRange);
   },[project_id])
 const toggleTag = (tag: string) => {
   setFilter(prev => {
@@ -102,7 +109,32 @@ const toggleAuditor=(auditor:string)=>{
     };
   });
 }
+   const handleCancel = () => { 
+       setCalenderOpen(false);
     
+   }; 
+   const handleConfirm = () => {
+    if(date?.from && date?.to){
+      const startUnix = Math.floor(date.from.getTime() / 1000); // 秒级时间戳
+      const endUnix = Math.floor(date.to.getTime() / 1000);     // 秒级时间戳
+
+      setFilter(prev => ({
+        ...prev,
+        round_time: [[startUnix, endUnix]]
+      }));
+    } else {
+      // 如果没选全则清空
+      setFilter(prev => ({
+        ...prev,
+        round_time: [],
+      }));
+    }
+
+    setCalenderOpen(false); // 关闭日历
+  
+      
+    }
+   
    React.useEffect(()=>{
   
        getAllTags(project_id).then(
@@ -129,13 +161,35 @@ const toggleAuditor=(auditor:string)=>{
             <CardHeader className='border-b px-6 py-2 bg-muted/50'>
                 <CardTitle className='text-xs text-[#000000] font-yahei font-bold'>高级筛选</CardTitle>
             </CardHeader> 
-            <CardContent className=' grid grid-rows-[6rem,auto,3rem,auto,3rem] items-center gap-2'> 
-                 <div className='mt-0 flex flex-col'>
-                    <Label className='text-xs font-yahei font-normal'>日期</Label>
-                    <StatusButton variant="time" className='ml-1 mt-2 w-30 h-6'>
-                        <p className='text-[8px] font-yahei font-normal'>2025.6.01</p><img src='src\assets\icons\calender.png' className='w-2'></img><Separator className='w-2'/><p className='text-[8px] font-yahei font-normal'>2025.6.07</p><img src='src\assets\icons\calender.png' className='w-2'></img>
+            <CardContent className='relative grid grid-rows-[6rem,auto,3rem,auto,3rem] items-center gap-2'> 
+
+                 <div className='relative mt-0 flex w-full flex-col'>
+                    <Label className=' text-xs font-yahei font-normal'>日期</Label>
+                    <StatusButton variant="time" className='ml-1 mt-2 w-30 h-6' onClick={()=>setCalenderOpen(!calenderOpen)}>
+                        <p className='text-[8px] font-yahei font-normal'>{date?.from?.toLocaleDateString() ||"起始日期"}</p><img src='src\assets\icons\calender.png' className='w-2'></img><Separator className='w-2'/><p className='text-[8px] font-yahei font-normal'>{date?.to?.toLocaleDateString()||"终止日期"}</p><img src='src\assets\icons\calender.png' className='w-2'></img>
                         </StatusButton>
+                        
                  </div>
+                 <AnimatePresence>
+                   {calenderOpen && (
+                    <motion.div
+               className="absolute top-0 left-60 p-2 bg-white  rounded-lg shadow"
+                initial={{ opacity: 0, x:-10}}
+                 animate={{ opacity: 1, x: 0 }}
+               exit={{ opacity: 0, x: -10 }}
+               transition={{ duration: 0.3 }}
+                    >
+                  <Calendar
+           mode="range"
+            selected={date}
+          onSelect={setDate}
+           className="w-80 rounded-md p-6"
+           handleCancel={handleCancel}
+           handleConfirm={handleConfirm}
+      />
+            </motion.div>
+           )}
+</AnimatePresence>
                      <div className='flex flex-col gap-2'>
                     <Label className='text-xs font-yahei font-normal'>标签</Label>
                     <div className='grid grid-cols-3 gap-2 '>
