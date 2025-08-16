@@ -8,41 +8,84 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/Dialog';
-import { Button } from '@/components/ui/Button';
-import { useState } from 'react';
+import { useState } from 'react'
+import { Icon } from '@/components/ui/Icon';
+import { StatusButton } from '@/components/Status';
+import { AvatarChange } from '@/components/AvatarChange';
+import { uploadImage,updateMyInfo } from '@/apis';
+import useUserStore from '@/stores/user';
 
-export function TestDialog() {
+const DEFAULT_AVATAR = '../../src/assets/icons/user.png';
+
+interface TestDialogProps {
+  placeholderName: string;
+  avatarUrl?: string;  // 可选
+
+}
+export function TestDialog({
+  placeholderName,
+  avatarUrl = DEFAULT_AVATAR,
+ 
+}: TestDialogProps) {
   const [open, setOpen] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [userAvatar , setUserAvatar] = useState(avatarUrl)
+  const [userName, setUserName] = useState<string>(placeholderName)
+    const {user, updateUser} = useUserStore();
+  const handleSubmit = () => {
+    if (avatarFile) {
+  uploadImage(avatarFile)
+    .then((res) => {
+      setUserAvatar(res); 
+      console.log(res)
+       updateUser({
+        ...user,
+        name: userName,
+        avatar: res,})// 更新本地状态
+      return updateMyInfo(res, userName); // 用上传结果直接调用接口
+    })
+    .catch((error) => {
+      console.log("更新个人信息失败", error);
+    });
+    setOpen(false);
+}
+
+  }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <>
+    <div className="flex  items-center justify-center">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="default">删除账号</Button>
+          <Icon name="member" />
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>确认删除账号？</DialogTitle>
-            <DialogDescription>
-              此操作无法撤销。删除账号将会永久移除您的所有数据。
+            <DialogDescription className='flex justify-center items-center mb-4'>
+                <AvatarChange onAvatarChange={file => setAvatarFile(file)} avatarUrl={avatarUrl}  ></AvatarChange>
+            </DialogDescription>
+            <DialogDescription className='flex justify-center items-center '>
+                <div className="w-[40%] h-10 rounded-md border-2 grid grid-cols-[90%_10%]">
+                     <div className='flex items-center'><input type="text" className='w-full h-[90%] pl-2 focus:border-gray-300 focus:outline-none focus:ring-0' placeholder={placeholderName} onChange={(e)=>setUserName(e.target.value)} /></div>
+                     <div className='flex items-center justify-center'> <img src="..\..\src\assets\icons\editpencil.png" className='w-3 h-3'/></div>
+                  </div>   
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className='flex flex-row  justify-center items-center gap-8 mb-4'>
             <DialogClose asChild>
-              <Button variant="outline">取消</Button>
+              <StatusButton variant="cancel" className='shadow-none w-24 h-10'>取消</StatusButton>
             </DialogClose>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                console.log('Confirmed deletion');
-                setOpen(false);
-              }}
+            <StatusButton
+              variant="complete"
+              className='w-24 h-10'
+              onClick={()=>handleSubmit()}
             >
-              确认删除
-            </Button>
+                完成
+            </StatusButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </div></>
+    
   );
 }
