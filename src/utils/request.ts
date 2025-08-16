@@ -1,5 +1,4 @@
 import useUserStore from '@/stores/user';
-import { StepId } from 'framer-motion';
 
 interface RequestOptions {
   headers?: HeadersInit;

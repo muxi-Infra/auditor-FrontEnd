@@ -9,7 +9,7 @@ export default function Login() {
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { updateUser, setToken ,user } = useUserStore();
+  const { updateUser, setToken  } = useUserStore();
 
   useEffect(() => {
     const handleLogin = async () => {

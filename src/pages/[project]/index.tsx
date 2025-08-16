@@ -1,8 +1,8 @@
-import { getProjectItems,auditItem,auditMany } from '@/apis';
+import { getProjectItems,auditMany } from '@/apis';
 import { Status, StatusProps,StatusButton } from '@/components/Status';
 import { Tag } from '@/components/Tag';
 import { Checkbox } from '@/components/ui/Checkbox';
-import { Item,itemToAudit } from '@/types';
+import { itemToAudit } from '@/types';
 import {
   Table,
   TableBody,
@@ -32,7 +32,7 @@ const mapStatusToVariant = (status: number): StatusProps['variant'] => {
 
 const EntryList = () => {
   const { projectId } = useRoute();
-  const { items,setItems,setOriginalItems,originalItems }=useItemStore()
+  const { items,setItems,setOriginalItems }=useItemStore()
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [auditManyBody,setAuditMany]=useState<itemToAudit[]>([])

@@ -1,5 +1,4 @@
 import { SearchInput } from '@/components/SearchInput';
-import { LargeToggle } from '@/components/CrazyToggle';
 import {
   Sidebar,
   SidebarContent,
@@ -21,13 +20,11 @@ import { CreateProjectDialog } from '@/components/CreateProjectDialog';
 import { Separator } from '@/components/ui/Separator';
 import { useNavigateToProject } from '@/hooks/navigate';
 import AdvaceFilter from '@/components/AdvanceFilter';
-import { getProjectItems,getProjectItemsBySearch } from '@/apis';
+import { getProjectItemsBySearch } from '@/apis';
 import useItemStore from '@/stores/items';
-import { error } from 'console';
 import { useState } from 'react';
 import { TestDialog } from './_components/TestDialog';
 
-const DEFAULT_AVATAR = '../src/assets/icons/user.png';
 // ProjectItem 组件
 const ProjectItem = forwardRef<
   ElementRef<typeof SidebarMenuItem>,
@@ -74,7 +71,8 @@ function Header({ menu }: { menu: ReactNode }) {
             setItems(response);
           }
          ).catch(
-          (err)=>setError(err.message)
+          (err)=>{setError(err.message)
+          console.log(error)}
          )
   }
   return (
