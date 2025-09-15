@@ -1,9 +1,18 @@
 export interface User {
-  avatar?: string;
+  avatar?: string | undefined;
   email?: string;
-  name?: string;
+  name?: string | undefined;
   role?: number;
+  id?: number | undefined;
+}
+
+export interface Member{
+  name: string;
   id: number;
+  avatar?: string;
+  project_role:number;
+  role:number;
+  email: string;
 }
 
 export interface Project {
@@ -12,6 +21,8 @@ export interface Project {
 }
 
 export interface ProjectDetail {
+  project_name: string;
+  description: string;
   total_number: number;
   current_number: number;
   api_key: string;
@@ -35,4 +46,34 @@ export interface Item {
 export interface Comment {
   content: string;
   pictures: string[];
+}
+
+export interface SearchBody {
+  project_id?: number;
+  query:string;
+}
+
+export interface FilterBody{
+
+  tags:string[];
+  auditors:string[];
+  round_time:[number,number][];
+  statuses:number[];
+}
+
+export interface itemToAudit{
+  item_id:number;
+  status:number;
+}
+
+export interface UpdateProject{
+  audit_rule:string;
+  description:string;
+  logo:string;
+  project_name:string;
+}
+
+export interface ProjectRole{
+  project_role:number;
+  user_id:number;
 }

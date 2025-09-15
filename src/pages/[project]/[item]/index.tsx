@@ -22,7 +22,7 @@ export default function EntryPage() {
 
   const handleAudit = (status: 0 | 1 | 2) => {
     if (!itemData) return;
-    auditItem(itemData.id, reason, status)
+    auditItem(itemData.id, status ,reason )
       .then(() => alert('审核成功'))
       .catch(() => alert('审核失败'));
   };
