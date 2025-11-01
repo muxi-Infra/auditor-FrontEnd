@@ -164,7 +164,7 @@ const toggleAuditor=(auditor:string)=>{
                  <div className='relative mt-0 flex w-full flex-col'>
                     <Label className=' text-xs font-yahei font-normal'>日期</Label>
                     <StatusButton variant="time" className='ml-1 mt-2 w-30 h-6' onClick={()=>setCalenderOpen(!calenderOpen)}>
-                        <p className='text-[8px] font-yahei font-normal'>{date?.from?.toLocaleDateString() ||"起始日期"}</p><img src='src\assets\icons\calender.png' className='w-2'></img><Separator className='w-2'/><p className='text-[8px] font-yahei font-normal'>{date?.to?.toLocaleDateString()||"终止日期"}</p><img src='src\assets\icons\calender.png' className='w-2'></img>
+                        <p className='text-[8px] font-yahei font-normal'>{date?.from?.toLocaleDateString() ||"起始日期"}</p><img src='/calender.png' className='w-2'></img><Separator className='w-2'/><p className='text-[8px] font-yahei font-normal'>{date?.to?.toLocaleDateString()||"终止日期"}</p><img src='/calender.png' className='w-2'></img>
                         </StatusButton>
                         
                  </div>
