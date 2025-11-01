@@ -20,10 +20,13 @@ import { CreateProjectDialog } from '@/components/CreateProjectDialog';
 import { Separator } from '@/components/ui/Separator';
 import { useNavigateToProject } from '@/hooks/navigate';
 import AdvaceFilter from '@/components/AdvanceFilter';
-import { getProjectItemsBySearch } from '@/apis';
+import { getProjectItemsBySearch,logout } from '@/apis';
 import useItemStore from '@/stores/items';
 import { useState } from 'react';
 import { TestDialog } from './_components/TestDialog';
+import { Card,CardContent } from '@/components/ui/Card';
+import { motion,AnimatePresence } from 'framer-motion';
+
 
 // ProjectItem 组件
 const ProjectItem = forwardRef<
@@ -56,8 +59,14 @@ function Header({ menu }: { menu: ReactNode }) {
   const location = useLocation();
   const projectId = location.pathname.split('/')[1];
   const [error,setError]=useState<string|null>(null);
-
+  const [openMenu,setOpenMenu] = useState(false);
+  const navigate = useNavigate();
   
+  const handlelogout = () =>{
+    logout().then(()=>{
+      navigate('/')
+    })
+  }
   const handleSearch=(value:string,projectId:number)=>{
         
         
@@ -78,7 +87,7 @@ function Header({ menu }: { menu: ReactNode }) {
   return (
     <div className="grid h-16 w-full grid-cols-[4rem,20rem,auto,6rem,12rem] place-items-center bg-[#FFFFFF]">
       {menu}
-      <SearchInput className="w-72" action={(value)=>handleSearch(value,projectId as unknown as number)}/>
+      <SearchInput  className="w-96" action={(value)=>handleSearch(value,projectId as unknown as number)}/>
       <div></div>
       <div className="flex h-full w-full items-center justify-center gap-2">
        <>
@@ -91,12 +100,32 @@ function Header({ menu }: { menu: ReactNode }) {
           onClick={() => projectId && toProjectSettings(parseInt(projectId))}
         />
       </div>
-      <div className="grid h-full w-full grid-cols-[1fr,3fr] place-items-center">
-        <Avatar className="size-10">
+      <div className=" relative grid h-full w-full grid-cols-[1fr,3fr] place-items-center">
+        <Avatar className="size-10" onClick={() => setOpenMenu(!openMenu)}>
           {/* <AvatarImage src="https://www.booling.cn/assets/avatar-bf4f5557.webp" /> */}
           <AvatarImage src={user?.avatar} />
           <AvatarFallback>瑜伽</AvatarFallback>
-        </Avatar>
+         
+        </Avatar><AnimatePresence>
+         {openMenu && (
+          
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute top-16 right-36"
+            >
+            <Card onClick={()=>handlelogout()}>
+              <CardContent className='pt-6 p-3 whitespace-nowrap'> 
+                登出
+              </CardContent>
+            </Card>
+
+            </motion.div>
+       
+            
+          )}
+             </AnimatePresence>
         <div className="flex h-full w-full flex-col items-start justify-center p-2">
           <div className="text-md font-bold">{user?.name}</div>
           <div className="text-muted-foreground text-[0.8rem]">
@@ -112,6 +141,7 @@ function AppSidebar() {
   const navigate = useNavigate();
   const { projects } = useProjectStore();
   const item_id=location.pathname.split('/')[2];
+    const { user } = useUserStore();
   return (
     <Sidebar className="bg-[#ffffff]">
       <SidebarHeader className="h-16">
@@ -131,7 +161,7 @@ function AppSidebar() {
               {project.name}
             </ProjectItem>
           ))}
-          <CreateProjectDialog></CreateProjectDialog>
+          <CreateProjectDialog addRight={user?.role === 2}></CreateProjectDialog>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="flex h-82 flex-row items-center justify-start px-4">

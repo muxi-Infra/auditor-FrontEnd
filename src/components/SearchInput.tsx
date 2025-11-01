@@ -20,7 +20,7 @@ const SearchInput = forwardRef<
   );
 
   return (
-    <div className={cn('relative flex items-center', containerClassName)}>
+    <div className={cn('relative flex items-center ml-20', containerClassName)}>
       <Icon
         name="search"
         className="absolute left-3 h-4 w-4 text-[#8F8D88]"

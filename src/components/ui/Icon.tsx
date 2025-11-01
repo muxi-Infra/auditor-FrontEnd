@@ -9,7 +9,7 @@ import Search from '@/assets/icons/search.svg?react';
 import Member from '@/assets/icons/member.svg?react';
 import Settings from '@/assets/icons/settings.svg?react';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
-import ChevronRight from '@/assets/icons/chevron-right.svg?react';
+import ChevronRight from '@/assets/icons/chevron-right.svg?react';//?react语法，表示引入的是一个React组件
 import * as React from 'react';
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {

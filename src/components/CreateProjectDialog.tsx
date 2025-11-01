@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from '@/components/ui/Dialog';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
@@ -16,7 +17,10 @@ import { Textarea } from './ui/Textarea';
 import { createProject, uploadImage } from '@/apis';
 import { useNavigateToProject } from '@/hooks/navigate';
 
-export function CreateProjectDialog() {
+interface CreateProjectDialogProps {
+   addRight:boolean; 
+}
+export function CreateProjectDialog({addRight}:CreateProjectDialogProps) {
   const [open, setOpen] = useState(false);
   const { toProject } = useNavigateToProject();
   const [name, setName] = useState('');
@@ -43,6 +47,7 @@ export function CreateProjectDialog() {
           新建项目
         </Button>
       </DialogTrigger>
+      {addRight?
       <DialogContent>
         <DialogHeader>
           <DialogTitle>新建项目</DialogTitle>
@@ -99,7 +104,23 @@ export function CreateProjectDialog() {
             提交
           </Button>
         </DialogFooter>
-      </DialogContent>
+      </DialogContent>:
+       <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>权限不够啦！</DialogTitle>
+                  <DialogDescription>
+                    只有超级管理员才有这个权限奥！
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline">确认</Button>
+                  </DialogClose>
+               
+                </DialogFooter>
+              </DialogContent>
+      }
+      
     </Dialog>
   );
 }

@@ -6,7 +6,7 @@ import { Avatar,AvatarFallback,AvatarImage } from "@radix-ui/react-avatar";
 import { Checkbox } from "@radix-ui/react-checkbox";
 
 
-const DEFAULT_AVATAR = '../../src/assets/icons/user.png';
+const DEFAULT_AVATAR = '/user.png';
 
 interface CardProps {
   avatar?: string;

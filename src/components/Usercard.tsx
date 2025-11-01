@@ -17,8 +17,8 @@ const mapRoletoVariant=(role:number):StatusProps["variant"]=>{
 
 
     switch(role){
-        case 0:return 'audit';
-        case 1:return 'mange'
+        case 1:return 'audit';
+        case 2:return 'mange'
     }
    }
 export default function UserCard(
@@ -41,7 +41,7 @@ export default function UserCard(
                     </div>
                 </div>
                 <div></div>
-                <div className=" flex justify-center items-center"><Status variant={mapRoletoVariant(role as number)}>{role === 0 ? "审核员" :"管理员"}</Status></div>
+                <div className=" flex justify-center items-center"><Status variant={mapRoletoVariant(role as number)}>{role === 1 ? "审核员" :"管理员"}</Status></div>
            </div>
         
         </>

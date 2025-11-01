@@ -13,11 +13,14 @@ import { Separator } from '@/components/ui/Separator';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { AddDialog } from '../_components/AddDialog';
 import { DeleteDialog } from '../_components/DeleteDialog';
+import useUserStore from '@/stores/user';
 
 export default function Mangement() {
   const project_id = +location.pathname.split('/')[1];
   const { removeProject, projects } = useProjectStore();
   const { toProject } = useNavigateToProject();
+  
+  const {user} = useUserStore();
   const [projectDetail, setProjectDetail] = React.useState<ProjectDetail>({
     project_name: '',
     description: '',
@@ -42,11 +45,22 @@ export default function Mangement() {
       if (!project_id) return;
       const detail = await getProjectDetail(Number(project_id));
       setProjectDetail(detail);
+
     };
     const fetchMembers = async () => {
       if (!project_id) return;
+
       const member = await getAllMembers(Number(project_id));
+      console.log(member);
+      if(member === null ){
+        setMembers([]);
+      }
+      if(member){
       setMembers(member);
+        
+      }else{
+        setMembers([]);
+      }
     };
     fetchProject();
     fetchMembers();
@@ -62,8 +76,15 @@ export default function Mangement() {
   };
 
   const handleEditProject = () => {
-    setProjectStatus('edit');
-  };
+  setUpdateProject({
+    project_name: projectDetail.project_name,
+    description: projectDetail.description,
+    audit_rule: projectDetail.audit_rule,
+    logo: "",
+  });
+  setProjectStatus('edit');
+};
+
   const handleEditMember = () => {
     setMemberStatus('edit');
     console.log(members);
@@ -96,29 +117,32 @@ export default function Mangement() {
     });
   };
   const handleChangeRole = (project_role: number) => {
-    console.log(projectRole);
+  console.log(projectRole);
 
-    setProjectRole((prev) => {
-      return prev.map((member) => ({
-        ...member,
-        project_role: project_role,
-      }));
-    });
-    setMembers((prev) =>
-      prev.map((member) => {
-        const matchedRole = projectRole.some(
-          (role) => role.user_id === member.id
-        );
-        if (matchedRole) {
-          return {
-            ...member,
-            project_role: project_role, // 更新角色
-          };
-        }
-        return member; // 保持不变
-      })
+  setProjectRole((prev) => {
+    const safePrev = prev ?? []; // 如果为null则用空数组
+    return safePrev.map((member) => ({
+      ...member,
+      project_role: project_role,
+    }));
+  });
+
+setMembers((prev) => {
+  const safePrev = prev ?? []; // 防止prev为null
+  const safeProjectRole = projectRole ?? [];
+
+  return safePrev.map((member) => {
+    const matchedRole = safeProjectRole.some(
+      (role) => role.user_id === member.id
     );
-  };
+    return matchedRole
+      ? { ...member, project_role: project_role }
+      : member;
+  });
+});
+
+};
+
   const handleDeleteMember = () => {
     const deletedIds = members
     .filter((member) => {
@@ -198,12 +222,13 @@ export default function Mangement() {
                         project_name: e.target.value,
                       })
                     }
+                  value={updatedProject.project_name} 
                     type="text"
                     className="focus:border-gray-300 focus:outline-none focus:ring-0"
                   />
                   <img
                     className="py-1"
-                    src="..\..\src\assets\icons\editpencil.png"
+                    src="/editpencil.png"
                   />
                 </>
               ) : (
@@ -224,12 +249,13 @@ export default function Mangement() {
                         description: e.target.value,
                       })
                     }
+                    value={updatedProject.description}
                     type="text"
-                    className="focus:border-gray-300 focus:outline-none focus:ring-0"
+                    className="focus:border-gray-300 focus:outline-none focus:ring-0 mb-2"
                   />
                   <img
-                    className="py-2"
-                    src="..\..\src\assets\icons\editpencil.png"
+                    className="pb-1"
+                    src="/editpencil.png"
                   />
                 </>
               ) : (
@@ -250,10 +276,11 @@ export default function Mangement() {
                         audit_rule: e.target.value,
                       })
                     }
+                    value={updatedProject?.audit_rule}
                     className="focus:border-gray resize-none focus:outline-none focus:ring-0"
                     placeholder={projectDetail?.audit_rule}
                   ></textarea>
-                  <img src="../../src/assets/icons/editpencil.png" />
+                  <img src="/editpencil.png" />
                 </>
               ) : (
                 <p className="text-md">{projectDetail?.audit_rule}</p>
@@ -268,7 +295,7 @@ export default function Mangement() {
           {memberStatus === 'edit' ? (
             <div className="flex gap-2">
               <AddDialog setOutMembers={handleSecondgetMembers} projectId={project_id}  projectMembers={members} api_key={projectDetail?.api_key}></AddDialog>
-              <StatusButton variant="save" onClick={handleSaveProjectRole}>保存</StatusButton>
+              <StatusButton variant="save" className='mb-1' onClick={handleSaveProjectRole}>保存</StatusButton>
             </div>
           ) : (
             <div>
@@ -282,24 +309,22 @@ export default function Mangement() {
           {memberStatus === 'view' ? (
             <div className="grid grid-cols-[48%_2%_48%]">
               <div className="grid grid-rows-4 gap-1">
-                {members.slice(0, 4).map((member) => {
-                  return (
-                    <UserCard
-                      key={member.id}
-                      name={member.name}
-                      avatar={member.avatar}
-                      role={member.project_role}
-                      description={member.email}
-                      className="h-18 w-full"
-                    />
-                  );
-                })}
+               {(members ?? []).slice(0, 4).map((member) => (
+  <UserCard
+    key={member.id}
+    name={member.name}
+    avatar={member.avatar}
+    role={member.project_role}
+    description={member.email}
+    className="h-18 w-full"
+  />
+))}
               </div>
               <div>
                 <Separator orientation="vertical" className="h-72"></Separator>
               </div>
               <div className="grid grid-rows-4">
-                {members.slice(4, members.length).map((member) => {
+                {(members ?? []).slice(4, members?.length).map((member) => {
                   return (
                     <UserCard
                       key={member.id}
@@ -317,9 +342,9 @@ export default function Mangement() {
               <div className="mb-5 flex flex-row gap-6">
                 <div className="ml-5 mt-2 flex flex-row gap-1">
                   <Checkbox
-                    checked={projectRole.length === members.length}
+                    checked={projectRole.length === members?.length}
                     onClick={() =>
-                      handleSelectAll(projectRole.length === members.length)
+                      handleSelectAll(projectRole.length === members?.length)
                     }
                   ></Checkbox>
                   <p className="font-bold">全选</p>
@@ -328,14 +353,14 @@ export default function Mangement() {
                   <StatusButton
                     variant="toaudit"
                     className="h-8"
-                    onClick={() => handleChangeRole(0)}
+                    onClick={() => handleChangeRole(1)}
                   >
                     设为审核员
                   </StatusButton>
                   <StatusButton
                     variant="tomange"
                     className="h-8"
-                    onClick={() => handleChangeRole(1)}
+                    onClick={() => handleChangeRole(2)}
                   >
                     设为管理员
                   </StatusButton>
@@ -349,7 +374,7 @@ export default function Mangement() {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                {members.map((member) => {
+                {(members!== null)&&((members || []).map((member) => {
                   return (
                     <div className="flex w-full flex-row items-center justify-center">
                       <Checkbox
@@ -373,13 +398,16 @@ export default function Mangement() {
                       ></UserCard>
                     </div>
                   );
-                })}
+                }))}
               </div>
             </div>
           )}
         </CardContent>
       </Card>
-      <DeleteDialog handleDelete={() => handleDeleteProject(project_id)}></DeleteDialog>
+      {(user?.role === 2)?
+      <DeleteDialog deleteRight={true} handleDelete={() => handleDeleteProject(project_id)}></DeleteDialog>:
+      <DeleteDialog deleteRight={false} handleDelete={() => handleDeleteProject(project_id)}></DeleteDialog>
+      }
       
     </div>
   );

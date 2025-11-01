@@ -1,25 +1,47 @@
 import { TagCheckbox } from '@/components/Tag';
 import { StatusButton } from '@/components/Status';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
-import { auditItem, getItemDetail } from '@/apis';
+import { auditItem, getItemDetail,getProjectItems } from '@/apis';
 import { Item } from '@/types';
 import { useEffect, useState } from 'react';
 import { ImageButton } from '@/components/ImageButton';
 import { Textarea } from '@/components/ui/Textarea';
 import { useRoute } from '@/hooks/route';
+import { useNavigateToProject } from '@/hooks/navigate';
+import { useMemo } from 'react';
 
 export default function EntryPage() {
-  const { itemId } = useRoute();
+  const { projectId,itemId } = useRoute();
   const [itemData, setItemData] = useState<Item>();
   const [imgIndex, setImgIndex] = useState(0);
   const [reason, setReason] = useState('');
+  const [allItems,setAllItems] = useState<Item[]>([])
+  const { toProjectItem } = useNavigateToProject();
+  
+  useEffect(() => {
+    getProjectItems(projectId as unknown as number).then(setAllItems)
+   
+  },[])
 
+   const index = useMemo(() => {
+  return allItems.findIndex(item => item.id === itemId);
+}, [allItems, itemId]);
+
+const nextIndex = useMemo(() => {
+  if (allItems.length === 0 || index === -1) return -1;
+  return (index + 1) % allItems.length;
+}, [index, allItems.length]);
   useEffect(() => {
     if (itemId) {
       getItemDetail(itemId).then(setItemData);
     }
   }, [itemId]);
-
+const previousIndex = useMemo(() => {
+  const length = allItems.length;
+  if (length === 0 || index === -1) return -1;
+  // 使用 ((a % b) + b) % b 保证非负
+  return ((index - 1) % length + length) % length;
+}, [index, allItems.length]);
   const handleAudit = (status: 0 | 1 | 2) => {
     if (!itemData) return;
     auditItem(itemData.id, status ,reason )
@@ -27,6 +49,13 @@ export default function EntryPage() {
       .catch(() => alert('审核失败'));
   };
 
+  const handleNextItem = () => {
+      toProjectItem(projectId as unknown as number,allItems[nextIndex]?.id as number)
+  }
+ const handlePreviousItem = () => {
+  console.log(previousIndex)
+     toProjectItem(projectId as unknown as number,allItems[previousIndex]?.id as number)
+ }
   return (
     <div className="flex h-full min-w-[80%] flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -86,7 +115,7 @@ export default function EntryPage() {
       </Card>
 
       <div className="flex justify-between">
-        <StatusButton variant="pagination">◀ PREVIOUS</StatusButton>
+        <StatusButton variant="pagination" onClick={()=>handlePreviousItem()}>◀ PREVIOUS</StatusButton>
         <div className="flex gap-2">
           <StatusButton variant="ai">AI审核</StatusButton>
           <StatusButton variant="reject" onClick={() => handleAudit(2)}>
@@ -96,7 +125,7 @@ export default function EntryPage() {
             PASS
           </StatusButton>
         </div>
-        <StatusButton variant="pagination">NEXT ▶</StatusButton>
+        <StatusButton variant="pagination" onClick={() =>handleNextItem()}>NEXT ▶</StatusButton>
       </div>
     </div>
   );

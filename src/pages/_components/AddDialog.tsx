@@ -82,7 +82,7 @@ const handleSearch=(value:string)=>{
       <Dialog  open={open}  onOpenChange={setOpen}>
         <DialogTrigger>
           <StatusButton variant="add" className="flex gap-0" onClick={()=>handleGetMembers()}>
-                          <p className="bg-red mb-1 text-3xl">+</p>
+                           <img className='w-4 h-4 mr-1'  src="/plus2.png" alt="" />
                           <p>新增</p>
                         </StatusButton>
         </DialogTrigger>

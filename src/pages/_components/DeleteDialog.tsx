@@ -14,8 +14,9 @@ import { Card,CardContent } from '@/components/ui/Card';
 
 interface DeleteDialogProps {
     handleDelete: () => void;
+    deleteRight:boolean;
 }
-export function DeleteDialog({handleDelete}:DeleteDialogProps) {
+export function DeleteDialog({handleDelete,deleteRight}:DeleteDialogProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,12 +28,14 @@ export function DeleteDialog({handleDelete}:DeleteDialogProps) {
           <p className="text-xl text-[#FF0404]">删除项目</p>
         </CardContent>
       </Card>
+    
         </DialogTrigger>
-        <DialogContent>
+        {deleteRight ? 
+         <DialogContent>
           <DialogHeader>
-            <DialogTitle>确认删除账号？</DialogTitle>
+            <DialogTitle>确认删除项目？</DialogTitle>
             <DialogDescription>
-              此操作无法撤销。删除账号将会永久移除您的所有数据。
+              此操作无法撤销。删除项目将会永久移除项目的所有数据。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -46,7 +49,23 @@ export function DeleteDialog({handleDelete}:DeleteDialogProps) {
               确认删除
             </Button>
           </DialogFooter>
-        </DialogContent>
+        </DialogContent>:
+        
+         <DialogContent>
+          <DialogHeader>
+            <DialogTitle>权限不够啦！</DialogTitle>
+            <DialogDescription>
+              只有超级管理员才有这个权限奥！
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">确认</Button>
+            </DialogClose>
+         
+          </DialogFooter>
+        </DialogContent>}
+       
       </Dialog>
   
   );
