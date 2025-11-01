@@ -171,6 +171,14 @@ async function getAllUsers(the_query:string = '',page:number = 1,pageSize:number
 async function selectUser(the_query:string,api_key:string){
   return await getWithAuth<User[]>(`/api/v1/project/selectUser?the_query=${the_query}`,api_key)
 }
+
+async function getProjectRole(project_id:number){
+  return await getWithAuth<number>(`/api/v1/user/getProjectRole/${project_id}`);
+}
+
+async function logout(){
+  return await getWithAuth<null>('/api/v1/auth/logout');
+}
 export  {
   login,
   getMyInfo,
@@ -195,4 +203,6 @@ export  {
   getAllUsers,
   addUsers,
   selectUser,
+  getProjectRole,
+  logout,
 };
