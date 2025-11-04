@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 
 interface ItemStore {
   items: Item[];
-  originalItems:Item[];
+  originalItems: Item[];
   setOriginalItems: (items: Item[]) => void;
   setItems: (items: Item[]) => void;
   clearItems: () => void;
@@ -14,10 +14,10 @@ const useItemStore = create<ItemStore>()(
   persist(
     (set) => ({
       items: [],
-      originalItems:[],
+      originalItems: [],
       setOriginalItems: (items: Item[]) => set({ originalItems: items }),
       setItems: (items: Item[]) => set({ items }),
-      clearItems: () => set({ items: [] ,originalItems:[] }),
+      clearItems: () => set({ items: [], originalItems: [] }),
     }),
     {
       name: 'item-storage',

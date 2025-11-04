@@ -26,18 +26,17 @@ export function AvatarChange({
   const [scale, setScale] = useState(1);
 
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const fileInput = e.target;
-  if (fileInput.files && fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    if (file) {
-      setImage(file);
-      setEditorOpen(true);
+    const fileInput = e.target;
+    if (fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      if (file) {
+        setImage(file);
+        setEditorOpen(true);
+      }
     }
-  }
-  // 🔥 关键：无论是否选择文件，都清空 input 值
-  fileInput.value = '';
-};
-
+    // 🔥 关键：无论是否选择文件，都清空 input 值
+    fileInput.value = '';
+  };
 
   const handleCropDone = () => {
     if (editorRef.current) {
@@ -46,8 +45,8 @@ export function AvatarChange({
       setDraftAvatar(dataUrl);
       setEditorOpen(false);
       fetch(dataUrl)
-        .then(res => res.blob())
-        .then(blob => {
+        .then((res) => res.blob())
+        .then((blob) => {
           const file = new File([blob], 'avatar.png', { type: 'image/png' });
           onAvatarChange(file);
         });
@@ -81,12 +80,10 @@ export function AvatarChange({
       {/* Dialog 替代原裁剪层 */}
       <Dialog open={editorOpen} onOpenChange={setEditorOpen}>
         <DialogContent className="max-w-[16em] rounded-md">
-          
-
           {image && (
-            <div className=" flex flex-col items-center justify-start space-y-4">
+            <div className="flex flex-col items-center justify-start space-y-4">
               {/* 裁剪区域 */}
-              <div className=" rounded-full overflow-hidden w-[150px] h-[150px]">
+              <div className="h-[150px] w-[150px] overflow-hidden rounded-full">
                 <AvatarEditor
                   ref={editorRef}
                   image={image}
@@ -99,10 +96,10 @@ export function AvatarChange({
               </div>
 
               {/* 缩放控制条 */}
-              <div className=" flex items-center justify-center gap-2 w-full">
+              <div className="flex w-full items-center justify-center gap-2">
                 <button
-                  className="px-2 text-[#A0A0A0] font-bold mb-1"
-                  onClick={() => setScale(prev => Math.max(prev - 0.1, 1))}
+                  className="mb-1 px-2 font-bold text-[#A0A0A0]"
+                  onClick={() => setScale((prev) => Math.max(prev - 0.1, 1))}
                 >
                   -
                 </button>
@@ -114,7 +111,7 @@ export function AvatarChange({
                   step="0.1"
                   value={scale}
                   onChange={(e) => setScale(parseFloat(e.target.value))}
-                  className="custom-slider w-40 h-2 border border-[#D9D9D9] rounded-full appearance-none"
+                  className="custom-slider h-2 w-40 appearance-none rounded-full border border-[#D9D9D9]"
                 />
                 <style>{`
                   .custom-slider::-webkit-slider-thumb {
@@ -137,24 +134,24 @@ export function AvatarChange({
                 `}</style>
 
                 <button
-                  className="px-2 text-[#A0A0A0] font-bold mb-1"
-                  onClick={() => setScale(prev => Math.min(prev + 0.1, 3))}
+                  className="mb-1 px-2 font-bold text-[#A0A0A0]"
+                  onClick={() => setScale((prev) => Math.min(prev + 0.1, 3))}
                 >
                   +
                 </button>
               </div>
 
               {/* 按钮区 */}
-              <div className=" flex flex-row justify-center items-center gap-4 mt-4">
+              <div className="mt-4 flex flex-row items-center justify-center gap-4">
                 <StatusButton
-                  className="w-16 h-6 text-[12px] rounded-sm"
+                  className="h-6 w-16 rounded-sm text-[12px]"
                   variant="cancel"
                   onClick={() => setEditorOpen(false)}
                 >
                   取消
                 </StatusButton>
                 <StatusButton
-                  className="w-16 h-6 text-[12px] rounded-sm"
+                  className="h-6 w-16 rounded-sm text-[12px]"
                   variant="complete"
                   onClick={handleCropDone}
                 >

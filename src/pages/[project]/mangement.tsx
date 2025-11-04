@@ -7,7 +7,12 @@ import { useNavigateToProject } from '@/hooks/navigate';
 import { StatusButton } from '@/components/Status';
 import { getProjectDetail } from '@/apis';
 import { ProjectDetail, UpdateProject, Member, ProjectRole } from '@/types';
-import { updateProject, getAllMembers, giveProjectRole,deleteUsers } from '@/apis';
+import {
+  updateProject,
+  getAllMembers,
+  giveProjectRole,
+  deleteUsers,
+} from '@/apis';
 import UserCard from '@/components/Usercard';
 import { Separator } from '@/components/ui/Separator';
 import { Checkbox } from '@/components/ui/Checkbox';
@@ -19,8 +24,8 @@ export default function Mangement() {
   const project_id = +location.pathname.split('/')[1];
   const { removeProject, projects } = useProjectStore();
   const { toProject } = useNavigateToProject();
-  
-  const {user} = useUserStore();
+
+  const { user } = useUserStore();
   const [projectDetail, setProjectDetail] = React.useState<ProjectDetail>({
     project_name: '',
     description: '',
@@ -39,26 +44,24 @@ export default function Mangement() {
   const [memberStatus, setMemberStatus] = useState<string>('view');
   const [members, setMembers] = useState<Member[]>([]);
   const [projectRole, setProjectRole] = useState<ProjectRole[]>([]);
-  const [deleteIds,setDeleteIds] = useState<number[]>([])
+  const [deleteIds, setDeleteIds] = useState<number[]>([]);
   React.useEffect(() => {
     const fetchProject = async () => {
       if (!project_id) return;
       const detail = await getProjectDetail(Number(project_id));
       setProjectDetail(detail);
-
     };
     const fetchMembers = async () => {
       if (!project_id) return;
 
       const member = await getAllMembers(Number(project_id));
       console.log(member);
-      if(member === null ){
+      if (member === null) {
         setMembers([]);
       }
-      if(member){
-      setMembers(member);
-        
-      }else{
+      if (member) {
+        setMembers(member);
+      } else {
         setMembers([]);
       }
     };
@@ -76,14 +79,14 @@ export default function Mangement() {
   };
 
   const handleEditProject = () => {
-  setUpdateProject({
-    project_name: projectDetail.project_name,
-    description: projectDetail.description,
-    audit_rule: projectDetail.audit_rule,
-    logo: "",
-  });
-  setProjectStatus('edit');
-};
+    setUpdateProject({
+      project_name: projectDetail.project_name,
+      description: projectDetail.description,
+      audit_rule: projectDetail.audit_rule,
+      logo: '',
+    });
+    setProjectStatus('edit');
+  };
 
   const handleEditMember = () => {
     setMemberStatus('edit');
@@ -117,42 +120,39 @@ export default function Mangement() {
     });
   };
   const handleChangeRole = (project_role: number) => {
-  console.log(projectRole);
+    console.log(projectRole);
 
-  setProjectRole((prev) => {
-    const safePrev = prev ?? []; // 如果为null则用空数组
-    return safePrev.map((member) => ({
-      ...member,
-      project_role: project_role,
-    }));
-  });
+    setProjectRole((prev) => {
+      const safePrev = prev ?? []; // 如果为null则用空数组
+      return safePrev.map((member) => ({
+        ...member,
+        project_role: project_role,
+      }));
+    });
 
-setMembers((prev) => {
-  const safePrev = prev ?? []; // 防止prev为null
-  const safeProjectRole = projectRole ?? [];
+    setMembers((prev) => {
+      const safePrev = prev ?? []; // 防止prev为null
+      const safeProjectRole = projectRole ?? [];
 
-  return safePrev.map((member) => {
-    const matchedRole = safeProjectRole.some(
-      (role) => role.user_id === member.id
-    );
-    return matchedRole
-      ? { ...member, project_role: project_role }
-      : member;
-  });
-});
-
-};
+      return safePrev.map((member) => {
+        const matchedRole = safeProjectRole.some(
+          (role) => role.user_id === member.id
+        );
+        return matchedRole ? { ...member, project_role: project_role } : member;
+      });
+    });
+  };
 
   const handleDeleteMember = () => {
     const deletedIds = members
-    .filter((member) => {
-      const matchedRole = projectRole.some(
-        (role) => role.user_id === member.id
-      );
-      return matchedRole; //
-    })
-    .map((member) => member.id);
-    setDeleteIds(deletedIds)
+      .filter((member) => {
+        const matchedRole = projectRole.some(
+          (role) => role.user_id === member.id
+        );
+        return matchedRole; //
+      })
+      .map((member) => member.id);
+    setDeleteIds(deletedIds);
     setMembers((prev) =>
       prev.filter((member) => {
         const matchedRole = projectRole.some(
@@ -175,19 +175,19 @@ setMembers((prev) => {
     }
   };
   const handleSaveProjectRole = () => {
-        console.log(deleteIds)
-        giveProjectRole(projectRole,projectDetail?.api_key)
-        deleteUsers(deleteIds,projectDetail?.api_key)
-        setMemberStatus("view")
+    console.log(deleteIds);
+    giveProjectRole(projectRole, projectDetail?.api_key);
+    deleteUsers(deleteIds, projectDetail?.api_key);
+    setMemberStatus('view');
   };
- const handleSecondgetMembers = () => {
-        const fetchMembers = async () => {
+  const handleSecondgetMembers = () => {
+    const fetchMembers = async () => {
       if (!project_id) return;
       const member = await getAllMembers(Number(project_id));
       setMembers(member);
     };
     fetchMembers();
- }  
+  };
 
   return (
     <div className="grid w-full grid-rows-2 gap-4">
@@ -222,14 +222,11 @@ setMembers((prev) => {
                         project_name: e.target.value,
                       })
                     }
-                  value={updatedProject.project_name} 
+                    value={updatedProject.project_name}
                     type="text"
                     className="focus:border-gray-300 focus:outline-none focus:ring-0"
                   />
-                  <img
-                    className="py-1"
-                    src="/editpencil.png"
-                  />
+                  <img className="py-1" src="/editpencil.png" />
                 </>
               ) : (
                 <p className="text-md">{projectDetail?.project_name}</p>
@@ -251,12 +248,9 @@ setMembers((prev) => {
                     }
                     value={updatedProject.description}
                     type="text"
-                    className="focus:border-gray-300 focus:outline-none focus:ring-0 mb-2"
+                    className="mb-2 focus:border-gray-300 focus:outline-none focus:ring-0"
                   />
-                  <img
-                    className="pb-1"
-                    src="/editpencil.png"
-                  />
+                  <img className="pb-1" src="/editpencil.png" />
                 </>
               ) : (
                 <p className="text-md">{projectDetail?.description}</p>
@@ -294,8 +288,19 @@ setMembers((prev) => {
           <CardTitle className="text-3xl">成员管理</CardTitle>
           {memberStatus === 'edit' ? (
             <div className="flex gap-2">
-              <AddDialog setOutMembers={handleSecondgetMembers} projectId={project_id}  projectMembers={members} api_key={projectDetail?.api_key}></AddDialog>
-              <StatusButton variant="save" className='mb-1' onClick={handleSaveProjectRole}>保存</StatusButton>
+              <AddDialog
+                setOutMembers={handleSecondgetMembers}
+                projectId={project_id}
+                projectMembers={members}
+                api_key={projectDetail?.api_key}
+              ></AddDialog>
+              <StatusButton
+                variant="save"
+                className="mb-1"
+                onClick={handleSaveProjectRole}
+              >
+                保存
+              </StatusButton>
             </div>
           ) : (
             <div>
@@ -309,16 +314,16 @@ setMembers((prev) => {
           {memberStatus === 'view' ? (
             <div className="grid grid-cols-[48%_2%_48%]">
               <div className="grid grid-rows-4 gap-1">
-               {(members ?? []).slice(0, 4).map((member) => (
-  <UserCard
-    key={member.id}
-    name={member.name}
-    avatar={member.avatar}
-    role={member.project_role}
-    description={member.email}
-    className="h-18 w-full"
-  />
-))}
+                {(members ?? []).slice(0, 4).map((member) => (
+                  <UserCard
+                    key={member.id}
+                    name={member.name}
+                    avatar={member.avatar}
+                    role={member.project_role}
+                    description={member.email}
+                    className="h-18 w-full"
+                  />
+                ))}
               </div>
               <div>
                 <Separator orientation="vertical" className="h-72"></Separator>
@@ -374,41 +379,48 @@ setMembers((prev) => {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                {(members!== null)&&((members || []).map((member) => {
-                  return (
-                    <div className="flex w-full flex-row items-center justify-center">
-                      <Checkbox
-                        checked={projectRole.some(
-                          (i) => i.user_id === member.id
-                        )}
-                        onClick={() =>
-                          handleMemberBoxChange({
-                            user_id: member.id,
-                            project_role: member.project_role,
-                          })
-                        }
-                      ></Checkbox>
-                      <UserCard
-                        key={member.id}
-                        className="w-[94%] grid-cols-[15%_75%_10%]"
-                        avatar={member.avatar}
-                        name={member.name}
-                        role={member.project_role}
-                        description={member.email}
-                      ></UserCard>
-                    </div>
-                  );
-                }))}
+                {members !== null &&
+                  (members || []).map((member) => {
+                    return (
+                      <div className="flex w-full flex-row items-center justify-center">
+                        <Checkbox
+                          checked={projectRole.some(
+                            (i) => i.user_id === member.id
+                          )}
+                          onClick={() =>
+                            handleMemberBoxChange({
+                              user_id: member.id,
+                              project_role: member.project_role,
+                            })
+                          }
+                        ></Checkbox>
+                        <UserCard
+                          key={member.id}
+                          className="w-[94%] grid-cols-[15%_75%_10%]"
+                          avatar={member.avatar}
+                          name={member.name}
+                          role={member.project_role}
+                          description={member.email}
+                        ></UserCard>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           )}
         </CardContent>
       </Card>
-      {(user?.role === 2)?
-      <DeleteDialog deleteRight={true} handleDelete={() => handleDeleteProject(project_id)}></DeleteDialog>:
-      <DeleteDialog deleteRight={false} handleDelete={() => handleDeleteProject(project_id)}></DeleteDialog>
-      }
-      
+      {user?.role === 2 ? (
+        <DeleteDialog
+          deleteRight={true}
+          handleDelete={() => handleDeleteProject(project_id)}
+        ></DeleteDialog>
+      ) : (
+        <DeleteDialog
+          deleteRight={false}
+          handleDelete={() => handleDeleteProject(project_id)}
+        ></DeleteDialog>
+      )}
     </div>
   );
 }

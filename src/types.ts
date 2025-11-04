@@ -6,12 +6,12 @@ export interface User {
   id?: number | undefined;
 }
 
-export interface Member{
+export interface Member {
   name: string;
   id: number;
   avatar?: string;
-  project_role:number;
-  role:number;
+  project_role: number;
+  role: number;
   email: string;
 }
 
@@ -50,30 +50,29 @@ export interface Comment {
 
 export interface SearchBody {
   project_id?: number;
-  query:string;
+  query: string;
 }
 
-export interface FilterBody{
-
-  tags:string[];
-  auditors:string[];
-  round_time:[number,number][];
-  statuses:number[];
+export interface FilterBody {
+  tags: string[];
+  auditors: string[];
+  round_time: [number, number][];
+  statuses: number[];
 }
 
-export interface itemToAudit{
-  item_id:number;
-  status:number;
+export interface itemToAudit {
+  item_id: number;
+  status: number;
 }
 
-export interface UpdateProject{
-  audit_rule:string;
-  description:string;
-  logo:string;
-  project_name:string;
+export interface UpdateProject {
+  audit_rule: string;
+  description: string;
+  logo: string;
+  project_name: string;
 }
 
-export interface ProjectRole{
-  project_role:number;
-  user_id:number;
+export interface ProjectRole {
+  project_role: number;
+  user_id: number;
 }

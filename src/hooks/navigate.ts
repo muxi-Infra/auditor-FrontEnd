@@ -22,8 +22,8 @@ export function useNavigateToProject() {
     toProjectItem: (projectId: number, itemId: number) => {
       navigate(`/${projectId}/${itemId}`);
     },
-    toProjectMangement:(projectId:number)=>{
-      navigate(`/${projectId}/mangement`)
-    }
+    toProjectMangement: (projectId: number) => {
+      navigate(`/${projectId}/mangement`);
+    },
   };
 }

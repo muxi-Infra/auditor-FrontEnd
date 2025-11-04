@@ -10,28 +10,26 @@ import {
 } from '@/components/ui/Dialog';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
-import { Card,CardContent } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 
 interface DeleteDialogProps {
-    handleDelete: () => void;
-    deleteRight:boolean;
+  handleDelete: () => void;
+  deleteRight: boolean;
 }
-export function DeleteDialog({handleDelete,deleteRight}:DeleteDialogProps) {
+export function DeleteDialog({ handleDelete, deleteRight }: DeleteDialogProps) {
   const [open, setOpen] = useState(false);
 
   return (
-   
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Card>
-        <CardContent className="flex w-full items-center justify-center p-2">
-          <p className="text-xl text-[#FF0404]">删除项目</p>
-        </CardContent>
-      </Card>
-    
-        </DialogTrigger>
-        {deleteRight ? 
-         <DialogContent>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Card>
+          <CardContent className="flex w-full items-center justify-center p-2">
+            <p className="text-xl text-[#FF0404]">删除项目</p>
+          </CardContent>
+        </Card>
+      </DialogTrigger>
+      {deleteRight ? (
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>确认删除项目？</DialogTitle>
             <DialogDescription>
@@ -42,16 +40,13 @@ export function DeleteDialog({handleDelete,deleteRight}:DeleteDialogProps) {
             <DialogClose asChild>
               <Button variant="outline">取消</Button>
             </DialogClose>
-            <Button
-              variant="destructive"
-               onClick={handleDelete}
-            >
+            <Button variant="destructive" onClick={handleDelete}>
               确认删除
             </Button>
           </DialogFooter>
-        </DialogContent>:
-        
-         <DialogContent>
+        </DialogContent>
+      ) : (
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>权限不够啦！</DialogTitle>
             <DialogDescription>
@@ -62,11 +57,9 @@ export function DeleteDialog({handleDelete,deleteRight}:DeleteDialogProps) {
             <DialogClose asChild>
               <Button variant="outline">确认</Button>
             </DialogClose>
-         
           </DialogFooter>
-        </DialogContent>}
-       
-      </Dialog>
-  
+        </DialogContent>
+      )}
+    </Dialog>
   );
 }

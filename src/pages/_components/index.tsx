@@ -31,18 +31,18 @@ export default function Page() {
         <StatusCheckbox variant="pending"></StatusCheckbox>
         <StatusCheckbox variant="reject"></StatusCheckbox>
         <StatusButton variant="time">Time</StatusButton>
-        <StatusButton variant='edit'>编辑</StatusButton>
-        <StatusButton variant='save'>保存</StatusButton>
-        <StatusButton variant='add'>+新增</StatusButton>
-        <StatusButton variant='toaudit'>设为审核员</StatusButton>
-        <StatusButton variant='delete'>删除</StatusButton>
-        <StatusButton variant='tomange'>设为管理员</StatusButton>
-        <Status variant='mange'>管理员</Status>
-        <Status variant='audit'>审核员</Status>
+        <StatusButton variant="edit">编辑</StatusButton>
+        <StatusButton variant="save">保存</StatusButton>
+        <StatusButton variant="add">+新增</StatusButton>
+        <StatusButton variant="toaudit">设为审核员</StatusButton>
+        <StatusButton variant="delete">删除</StatusButton>
+        <StatusButton variant="tomange">设为管理员</StatusButton>
+        <Status variant="mange">管理员</Status>
+        <Status variant="audit">审核员</Status>
         <Toggle></Toggle>
         <Tag>Tag</Tag>
         <TagCheckbox>Tag</TagCheckbox>
-        
+
         <Checkbox></Checkbox>
         <ImageButton direction="prev"></ImageButton>
         <ImageButton direction="next"></ImageButton>
@@ -58,13 +58,10 @@ export default function Page() {
         <TestPagination></TestPagination>
         <TestCalendar></TestCalendar>
       </div>
-    
-      
-    
+
       <AdvaceFilter></AdvaceFilter>
       <div>
-      <UserCard></UserCard>
- 
+        <UserCard></UserCard>
       </div>
     </>
   );
