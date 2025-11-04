@@ -75,9 +75,10 @@ export function DialogTrigger({
 
 interface DialogContentProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-export function DialogContent({ children }: DialogContentProps) {
+export function DialogContent({ children, className }: DialogContentProps) {
   const { open, handleClose } = useDialogContext();
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -116,7 +117,7 @@ export function DialogContent({ children }: DialogContentProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed  inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 transition-opacity"
@@ -126,7 +127,10 @@ export function DialogContent({ children }: DialogContentProps) {
       {/* Dialog */}
       <div
         ref={contentRef}
-        className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 relative z-50 w-full h-auto max-w-3xl rounded-lg bg-white p-6 shadow-lg transition-all duration-200"
+        className={cn(
+          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 relative z-50 h-auto w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg transition-all duration-200',
+          className
+        )}
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
@@ -144,7 +148,9 @@ interface DialogHeaderProps {
 
 export function DialogHeader({ children }: DialogHeaderProps) {
   return (
-    <div className="mb-4 space-y-1.5 text-center sm:text-left overflow-auto">{children}</div>
+    <div className="mb-4 space-y-1.5 overflow-auto text-center sm:text-left">
+      {children}
+    </div>
   );
 }
 
@@ -165,28 +171,23 @@ export function DialogTitle({ children }: DialogTitleProps) {
 
 interface DialogDescriptionProps {
   children: React.ReactNode;
-  className?: string
+  className?: string;
 }
 
-export function DialogDescription({ children,className }: DialogDescriptionProps) {
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
+export function DialogDescription({
+  children,
+  className,
+}: DialogDescriptionProps) {
+  return <div className={className}>{children}</div>;
 }
 
 interface DialogFooterProps {
   children: React.ReactNode;
-  className?: string; 
+  className?: string;
 }
 
-export function DialogFooter({ children,className }: DialogFooterProps) {
-  return (
-    <div className={cn("mt-6 flex flex-col",className)}>
-      {children}
-    </div>
-  );
+export function DialogFooter({ children, className }: DialogFooterProps) {
+  return <div className={cn('mt-6 flex flex-col', className)}>{children}</div>;
 }
 
 interface DialogCloseProps

@@ -7,15 +7,16 @@ export default function Page() {
   const { setProjects } = useProjectStore();
   const [isChecking, setIsChecking] = useState(true);
   const { toProject } = useNavigateToProject();
- const {updateUser,user} = useUserStore();
+  const { updateUser, user } = useUserStore();
   useEffect(() => {
-    getMyInfo().then((res)=>{
-      console.log(res);
-      updateUser({
-        ...res
+    getMyInfo()
+      .then((res) => {
+        console.log(res);
+        updateUser({
+          ...res,
+        });
+        console.log(user);
       })
-      console.log(user)
-    })
       .then(() => {
         getProjectList().then((projectList) => {
           setProjects(projectList);

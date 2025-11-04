@@ -1,5 +1,5 @@
-import { getProjectItems,auditMany } from '@/apis';
-import { Status, StatusProps,StatusButton } from '@/components/Status';
+import { getProjectItems, auditMany } from '@/apis';
+import { Status, StatusProps, StatusButton } from '@/components/Status';
 import { Tag } from '@/components/Tag';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { itemToAudit } from '@/types';
@@ -29,64 +29,59 @@ const mapStatusToVariant = (status: number): StatusProps['variant'] => {
   }
 };
 
-
 const EntryList = () => {
   const { projectId } = useRoute();
-  const { items,setItems,setOriginalItems }=useItemStore()
+  const { items, setItems, setOriginalItems } = useItemStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [auditManyBody,setAuditMany]=useState<itemToAudit[]>([])
- 
- const handleChangeboxChange=(item:itemToAudit) => {
-  setAuditMany( prev => {
-     const currentIndex=prev.findIndex(i=>i.item_id===item.item_id)
+  const [auditManyBody, setAuditMany] = useState<itemToAudit[]>([]);
 
-     if(currentIndex>-1){
-      return prev.filter(i=>i.item_id!==item.item_id)
-     }else{
-      return [...prev,{item_id:item.item_id,status:item.status}]
-     }
-  })
- }
- const handleAuditManyPass=(items:itemToAudit[])=>{
-     setAuditMany(
-        items.map(item=>{
-          return{
-            item_id:item.item_id,
-            status:1
-          }
-        })
-     )
-     auditMany(items).then(()=>{
-      setAuditMany([])
-     }).catch(
-      (err)=>{
+  const handleChangeboxChange = (item: itemToAudit) => {
+    setAuditMany((prev) => {
+      const currentIndex = prev.findIndex((i) => i.item_id === item.item_id);
+
+      if (currentIndex > -1) {
+        return prev.filter((i) => i.item_id !== item.item_id);
+      } else {
+        return [...prev, { item_id: item.item_id, status: item.status }];
+      }
+    });
+  };
+  const handleAuditManyPass = (items: itemToAudit[]) => {
+    setAuditMany(
+      items.map((item) => {
+        return {
+          item_id: item.item_id,
+          status: 1,
+        };
+      })
+    );
+    auditMany(items)
+      .then(() => {
+        setAuditMany([]);
+      })
+      .catch((err) => {
         console.log(err);
-      }
-     )
- }
- const handleAuditManyReject=(items:itemToAudit[])=>{
-     setAuditMany(
-        items.map(item=>{
-          return{
-            item_id:item.item_id,
-            status:2
-          }
-        })
-     )
-     auditMany(items).then(
-      ()=>{
-        setAuditMany([])
-        console.log("成功批量审核")
-      }
-     ).catch(
-      (err)=>{
+      });
+  };
+  const handleAuditManyReject = (items: itemToAudit[]) => {
+    setAuditMany(
+      items.map((item) => {
+        return {
+          item_id: item.item_id,
+          status: 2,
+        };
+      })
+    );
+    auditMany(items)
+      .then(() => {
+        setAuditMany([]);
+        console.log('成功批量审核');
+      })
+      .catch((err) => {
         console.log(err);
-      
-      }
-     )
-   
- }
+      });
+  };
   useEffect(() => {
     if (!projectId) {
       setError('No project selected');
@@ -97,23 +92,21 @@ const EntryList = () => {
     setError(null);
     getProjectItems(projectId)
       .then((response) => {
-        if (response===null) {
-        
+        if (response === null) {
           setItems([]);
           setOriginalItems([]);
           return;
-        }else{
-         setItems(response);
-         setOriginalItems(response)
-         console.log(response)
-      }      
+        } else {
+          setItems(response);
+          setOriginalItems(response);
+          console.log(response);
+        }
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
 
-      setAuditMany([])
-   
-  }, [projectId,setItems]);
+    setAuditMany([]);
+  }, [projectId, setItems]);
 
   if (loading) {
     return <div className="py-4 text-center">Loading...</div>;
@@ -135,9 +128,19 @@ const EntryList = () => {
             <span>全选</span>
           </TableHead>
           <TableHead className="text-center font-bold text-foreground">
-            <span className='flex justify-center gap-2'>
-              <StatusButton variant="pass" onClick={()=>handleAuditManyPass(auditManyBody)}>全部通过</StatusButton>
-              <StatusButton variant="reject" onClick={()=>handleAuditManyReject(auditManyBody)}>全部拒绝</StatusButton>
+            <span className="flex justify-center gap-2">
+              <StatusButton
+                variant="pass"
+                onClick={() => handleAuditManyPass(auditManyBody)}
+              >
+                全部通过
+              </StatusButton>
+              <StatusButton
+                variant="reject"
+                onClick={() => handleAuditManyReject(auditManyBody)}
+              >
+                全部拒绝
+              </StatusButton>
             </span>
           </TableHead>
           <TableHead className="text-center font-bold text-foreground">
@@ -158,7 +161,15 @@ const EntryList = () => {
         {items.map((item) => (
           <TableRow key={item.id}>
             <TableCell className="text-center">
-              <Checkbox checked={auditManyBody.some(i=>item.id===i.item_id)} onClick={()=>handleChangeboxChange({item_id:item.id,status:item.status})}></Checkbox>
+              <Checkbox
+                checked={auditManyBody.some((i) => item.id === i.item_id)}
+                onClick={() =>
+                  handleChangeboxChange({
+                    item_id: item.id,
+                    status: item.status,
+                  })
+                }
+              ></Checkbox>
             </TableCell>
             <TableCell className="text-center">
               <Link to={`${item.id}`} className="flex flex-col gap-1">
@@ -180,7 +191,9 @@ const EntryList = () => {
               </div>
             </TableCell>
             <TableCell className="text-center">
-              <Status variant={mapStatusToVariant(item.status)}>{mapStatusToVariant(item.status)?.toUpperCase()}</Status>
+              <Status variant={mapStatusToVariant(item.status)}>
+                {mapStatusToVariant(item.status)?.toUpperCase()}
+              </Status>
             </TableCell>
           </TableRow>
         ))}

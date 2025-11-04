@@ -10,10 +10,10 @@ import { StatusButton } from '../Status';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-type CalendarPropsp = CalendarProps&{
-  handleCancel:()=>void;
-  handleConfirm:()=>void;
-}
+type CalendarPropsp = CalendarProps & {
+  handleCancel: () => void;
+  handleConfirm: () => void;
+};
 
 function Calendar({
   className,
@@ -81,17 +81,11 @@ function Calendar({
         }}
         {...props}
       />
-       <div className="mt-4 flex justify-end gap-2">
-        <StatusButton
-          variant='cancel'
-          onClick={handleCancel}
-        >
+      <div className="mt-4 flex justify-end gap-2">
+        <StatusButton variant="cancel" onClick={handleCancel}>
           取消
         </StatusButton>
-        <StatusButton
-         variant='complete'
-         onClick={handleConfirm}
-        >
+        <StatusButton variant="complete" onClick={handleConfirm}>
           确认
         </StatusButton>
       </div>

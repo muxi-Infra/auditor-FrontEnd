@@ -1,23 +1,29 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Progress } from '@/components/ui/Progress';
-import { getProjectDetail } from '@/apis';
+import { getProjectDetail, getProjectRole } from '@/apis';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ProjectDetail } from '@/types';
 import { useNavigateToProject } from '@/hooks/navigate';
+import { AllDialog } from '@/components/ui/AllDialog';
+import useUserStore from '@/stores/user';
 
 export default function Settings() {
   const { project: projectId } = useParams();
   const [projectDetail, setProjectDetail] = useState<ProjectDetail>();
-  const { toProjectMangement }=useNavigateToProject()
-
+  const { toProjectMangement } = useNavigateToProject();
+  const [projectRole, setProjectRole] = useState<number>(0);
+  const { user } = useUserStore();
   useEffect(() => {
     const fetchProject = async () => {
       if (!projectId) return;
       const detail = await getProjectDetail(Number(projectId));
       setProjectDetail(detail);
     };
+    getProjectRole(Number(projectId)).then((res) => {
+      setProjectRole(res);
+    });
     fetchProject();
   }, [projectId]);
 
@@ -27,7 +33,7 @@ export default function Settings() {
         <CardHeader>
           <CardTitle className="text-xl">设置</CardTitle>
         </CardHeader>
-        <CardContent className="grid w-full grid-cols-2 gap-4 ">
+        <CardContent className="grid w-full grid-cols-2 gap-4">
           <div>
             <Label>项目信息</Label>
             <Card className="py-4">
@@ -65,15 +71,22 @@ export default function Settings() {
               </CardContent>
             </Card>
           </div>
-        <div className='col-span-2'>
-          <Card onClick={()=>toProjectMangement(Number(projectId))}>
-            <CardContent className='p-4 flex justify-between items-center'>
-               <div className='bg-white'>项目管理入口</div>
-              <img width={15}  src="..\..\src\assets\icons\enter.png"/>
-            </CardContent>
-          </Card>
-        </div>
-          
+          <div className="col-span-2">
+            {user?.role === 1 && projectRole === 1 ? (
+              <AllDialog></AllDialog>
+            ) : (
+              <Card
+                onClick={() =>
+                  toProjectMangement(projectId as unknown as number)
+                }
+              >
+                <CardContent className="flex items-center justify-between p-4">
+                  <div className="bg-white">项目管理入口</div>
+                  <img width={15} src="/enter.png" />
+                </CardContent>
+              </Card>
+            )}
+          </div>
         </CardContent>
       </Card>
       <Card>

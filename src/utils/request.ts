@@ -88,7 +88,7 @@ async function del<T>(path: string, options: PostOptions): Promise<T> {
       },
       body: JSON.stringify(options.body),
     });
-   
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -101,7 +101,6 @@ async function del<T>(path: string, options: PostOptions): Promise<T> {
   }
 }
 
-
 async function put<T>(path: string, options: PostOptions): Promise<T> {
   const url = addQueryParams(path, options.params);
   try {
@@ -110,11 +109,10 @@ async function put<T>(path: string, options: PostOptions): Promise<T> {
       headers: {
         'Content-Type': 'application/json',
         ...options.headers,
-        
       },
       body: JSON.stringify(options.body),
     });
-   
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -131,9 +129,8 @@ async function put<T>(path: string, options: PostOptions): Promise<T> {
  */
 async function getWithAuth<T>(
   path: string,
-   api_key?: string,
-  options: RequestOptions = {},
- 
+  api_key?: string,
+  options: RequestOptions = {}
 ): Promise<T> {
   const token = useUserStore.getState().getToken();
 
@@ -154,19 +151,18 @@ async function getWithAuth<T>(
 
 async function delWithAuth<T>(
   path: string,
-  options: PostOptions = {body : {}},
-  api_key?:string
+  options: PostOptions = { body: {} },
+  api_key?: string
 ): Promise<T> {
   const token = useUserStore.getState().getToken();
 
   try {
-    
     return await del<T>(path, {
       ...options,
       headers: {
         ...options.headers,
         Authorization: `Bearer ${token}`,
-       ...(api_key && { api_key }), // 仅在 api_key 存在时设置
+        ...(api_key && { api_key }), // 仅在 api_key 存在时设置
       },
     });
   } catch (error) {
@@ -177,7 +173,11 @@ async function delWithAuth<T>(
 /**
  * Wrapper for HTTP POST requests with authentication
  */
-async function postWithAuth<T>(path: string, options: PostOptions, api_key?:string): Promise<T> {
+async function postWithAuth<T>(
+  path: string,
+  options: PostOptions,
+  api_key?: string
+): Promise<T> {
   const token = useUserStore.getState().getToken();
 
   try {
@@ -195,22 +195,20 @@ async function postWithAuth<T>(path: string, options: PostOptions, api_key?:stri
   }
 }
 
-
 async function putWithAuth<T>(
   path: string,
   options: PostOptions,
-  api_key:string,
+  api_key: string
 ): Promise<T> {
   const token = useUserStore.getState().getToken();
- 
+
   try {
-    
     return await put<T>(path, {
       ...options,
       headers: {
         ...options.headers,
         Authorization: `Bearer ${token}`,
-       api_key:api_key,
+        api_key: api_key,
       },
     });
   } catch (error) {
@@ -219,4 +217,4 @@ async function putWithAuth<T>(
   }
 }
 
-export { get, post, getWithAuth, postWithAuth, delWithAuth ,putWithAuth};
+export { get, post, getWithAuth, postWithAuth, delWithAuth, putWithAuth };

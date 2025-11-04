@@ -19,9 +19,8 @@ const useUserStore = create<UserStore>()(
       updateUser: (updates: User) =>
         set((state) => ({
           user: {
-           
             ...state.user,
-             ...updates,
+            ...updates,
           },
         })),
       getToken: () => get().token,
