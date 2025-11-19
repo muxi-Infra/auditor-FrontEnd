@@ -214,6 +214,14 @@ async function getProjectRole(project_id: number) {
 async function logout() {
   return await getWithAuth<null>('/api/v1/auth/logout');
 }
+
+async function aiAudit(items:Item[]){
+  return postWithAuth<null>('/api/v1/llm/audit',
+    {body:{
+      data:items
+    }}
+  )
+}
 export {
   login,
   getMyInfo,
@@ -240,4 +248,5 @@ export {
   selectUser,
   getProjectRole,
   logout,
+  aiAudit,
 };

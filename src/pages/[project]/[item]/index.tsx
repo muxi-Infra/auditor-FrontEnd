@@ -1,7 +1,7 @@
 import { TagCheckbox } from '@/components/Tag';
 import { StatusButton } from '@/components/Status';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
-import { auditItem, getItemDetail, getProjectItems } from '@/apis';
+import { auditItem, getItemDetail, getProjectItems, aiAudit } from '@/apis';
 import { Item } from '@/types';
 import { useEffect, useState } from 'react';
 import { ImageButton } from '@/components/ImageButton';
@@ -44,9 +44,21 @@ export default function EntryPage() {
   const handleAudit = (status: 0 | 1 | 2) => {
     if (!itemData) return;
     auditItem(itemData.id, status, reason)
-      .then(() => alert('审核成功'))
+      .then(() => {alert('审核成功')
+        handleNextItem();
+      })
       .catch(() => alert('审核失败'));
   };
+  const handleAiAudit = () => {
+    if(!itemData) return;
+    aiAudit([itemData]).then(
+      () => {alert('AI审核请求已发送')
+      handleNextItem();
+      }
+    ).catch(
+      () => alert('AI审核请求发送失败')
+    )
+  }
 
   const handleNextItem = () => {
     toProjectItem(
@@ -124,7 +136,7 @@ export default function EntryPage() {
           ◀ PREVIOUS
         </StatusButton>
         <div className="flex gap-2">
-          <StatusButton variant="ai">AI审核</StatusButton>
+          <StatusButton variant="ai" onClick={()=>handleAiAudit()}>AI审核</StatusButton>
           <StatusButton variant="reject" onClick={() => handleAudit(2)}>
             REJECT
           </StatusButton>
