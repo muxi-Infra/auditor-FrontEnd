@@ -185,10 +185,11 @@ const EntryList = () => {
             <TableCell className="text-center">{item.author}</TableCell>
             <TableCell className="text-center">
               <div className="flex flex-wrap items-center justify-center gap-1">
-                {item.tags.map((tag: string, index: number) => (
+                {(item?.tags ?? []).map((tag: string, index: number) => (
                   <Tag key={index}>{tag}</Tag>
                 ))}
               </div>
+
             </TableCell>
             <TableCell className="text-center">
               <Status variant={mapStatusToVariant(item.status)}>
