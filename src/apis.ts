@@ -1,3 +1,4 @@
+
 import {
   Item,
   Project,
@@ -71,6 +72,19 @@ async function getProjectItemsBySearch(
       query: search.query,
     },
   });
+}
+async function getProjectItemsByPagination(
+  project_id:number,
+  page:number,
+  page_size:number
+){
+  return postWithAuth<Item[]>('/api/v1/item/select',{
+    body:{
+      project_id:project_id,
+      page:page,
+      page_size:page_size
+    }
+  })
 }
 async function getProjectItemsByFilter(
   filter: FilterBody & { project_id: number }
@@ -249,4 +263,5 @@ export {
   getProjectRole,
   logout,
   aiAudit,
+  getProjectItemsByPagination
 };
