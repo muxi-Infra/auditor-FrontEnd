@@ -6,7 +6,7 @@ import { Toggle } from '@/components/ui/Toggle';
 import { ImageButton } from '@/components/ImageButton';
 import { LargeToggle, SmallToggle } from '@/components/CrazyToggle';
 
-import { TestPagination } from './TestPagination';
+
 import { TestCalendar } from './TestCalendar';
 import { Input } from '@/components/ui/Input';
 import { SearchInput } from '@/components/SearchInput';
@@ -55,7 +55,7 @@ export default function Page() {
           action={(value) => alert(value)}
         />
         <Progress value={80}></Progress>
-        <TestPagination></TestPagination>
+        
         <TestCalendar></TestCalendar>
       </div>
 
