@@ -6,10 +6,10 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/Pagination";
-import { useState } from "react";
-import { getProjectItemsByPagination } from "@/apis";
-import useItemStore from "@/stores/items";
+} from '@/components/ui/Pagination';
+import { useState } from 'react';
+import { getProjectItemsByPagination } from '@/apis';
+import useItemStore from '@/stores/items';
 interface TestPaginationProps {
   project_id: number;
   currentPage?: number;
@@ -22,24 +22,19 @@ export function TestPagination({
   totalPage = 100,
 }: TestPaginationProps) {
   const [curPage, setCurPage] = useState<number>(currentPage);
- const {setItems, setOriginalItems } = useItemStore();
+  const { setItems, setOriginalItems } = useItemStore();
   const handlePagination = (page: number) => {
-    
-    getProjectItemsByPagination(project_id,page,10).then(
-      (res)=>{
-          console.log(curPage)
-           setItems(res);
-           
-           setOriginalItems(res);
-           setCurPage(page)
-          
-      }
-    ).catch(
-      (e)=>{
-        console.log(e);
-      }
-    )
+    getProjectItemsByPagination(project_id, page, 10)
+      .then((res) => {
+        console.log(curPage);
+        setItems(res);
 
+        setOriginalItems(res);
+        setCurPage(page);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const handleNext = () => {
@@ -50,8 +45,12 @@ export function TestPagination({
   };
 
   const pages = Array.from({ length: totalPage }, (_, i) => i + 1);
-  const displayPages1 = pages.filter((p) => p >= curPage - 2 && p <= curPage + 2);
-  const displayPages2 = pages.filter((p) => p >= totalPage - 4 && p <= totalPage);
+  const displayPages1 = pages.filter(
+    (p) => p >= curPage - 2 && p <= curPage + 2
+  );
+  const displayPages2 = pages.filter(
+    (p) => p >= totalPage - 4 && p <= totalPage
+  );
 
   // ----------------------------------------------------
   // 情况 1: totalPage <= 10

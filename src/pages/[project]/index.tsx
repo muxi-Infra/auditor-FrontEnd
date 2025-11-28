@@ -36,7 +36,7 @@ const EntryList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [auditManyBody, setAuditMany] = useState<itemToAudit[]>([]);
-  const [totalPage, setTotalPage] = useState<number>(100)
+  const [totalPage, setTotalPage] = useState<number>(100);
   const handleChangeboxChange = (item: itemToAudit) => {
     setAuditMany((prev) => {
       const currentIndex = prev.findIndex((i) => i.item_id === item.item_id);
@@ -57,10 +57,12 @@ const EntryList = () => {
         };
       })
     );
-    auditMany(items.map(item => ({
-      item_id: item.item_id,
-      status: 1 // 或 2
-    })))
+    auditMany(
+      items.map((item) => ({
+        item_id: item.item_id,
+        status: 1, // 或 2
+      }))
+    )
       .then(() => {
         setAuditMany([]);
       })
@@ -77,10 +79,12 @@ const EntryList = () => {
         };
       })
     );
-    auditMany(items.map(item => ({
-      item_id: item.item_id,
-      status: 2 // 或 2
-    })))
+    auditMany(
+      items.map((item) => ({
+        item_id: item.item_id,
+        status: 2, // 或 2
+      }))
+    )
       .then(() => {
         setAuditMany([]);
         console.log('成功批量审核');
@@ -111,14 +115,14 @@ const EntryList = () => {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-    getItemsAmount(projectId).then((response) => {
-      const pages = Math.ceil(response/10)
-      setTotalPage(pages)
-    }).catch(
-      (e) => {
+    getItemsAmount(projectId)
+      .then((response) => {
+        const pages = Math.ceil(response / 10);
+        setTotalPage(pages);
+      })
+      .catch((e) => {
         console.log(e);
-      }
-    )
+      });
     setAuditMany([]);
   }, [projectId, setItems]);
 
@@ -204,7 +208,6 @@ const EntryList = () => {
                     <Tag key={index}>{tag}</Tag>
                   ))}
                 </div>
-
               </TableCell>
               <TableCell className="text-center">
                 <Status variant={mapStatusToVariant(item.status)}>
@@ -215,10 +218,15 @@ const EntryList = () => {
           ))}
         </TableBody>
       </Table>
-      {items.length !== 0 ? <TestPagination project_id={projectId ? projectId : 0} totalPage={totalPage}></TestPagination> : <div></div>}
+      {items.length !== 0 ? (
+        <TestPagination
+          project_id={projectId ? projectId : 0}
+          totalPage={totalPage}
+        ></TestPagination>
+      ) : (
+        <div></div>
+      )}
     </div>
-
-
   );
 };
 
