@@ -8,7 +8,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/Pagination";
 import { useState } from "react";
-
+import { getProjectItemsByPagination } from "@/apis";
+import useItemStore from "@/stores/items";
 interface TestPaginationProps {
   project_id: number;
   currentPage?: number;
@@ -17,13 +18,28 @@ interface TestPaginationProps {
 
 export function TestPagination({
   project_id,
-  currentPage = 6,
+  currentPage = 1,
   totalPage = 100,
 }: TestPaginationProps) {
   const [curPage, setCurPage] = useState<number>(currentPage);
-
+ const {setItems, setOriginalItems } = useItemStore();
   const handlePagination = (page: number) => {
-    setCurPage(page);
+    
+    getProjectItemsByPagination(project_id,page,10).then(
+      (res)=>{
+          console.log(curPage)
+           setItems(res);
+           
+           setOriginalItems(res);
+           setCurPage(page)
+          
+      }
+    ).catch(
+      (e)=>{
+        console.log(e);
+      }
+    )
+
   };
 
   const handleNext = () => {

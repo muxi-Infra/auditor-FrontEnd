@@ -1,4 +1,5 @@
 
+import { number } from 'framer-motion';
 import {
   Item,
   Project,
@@ -85,6 +86,9 @@ async function getProjectItemsByPagination(
       page_size:page_size
     }
   })
+}
+async function getItemsAmount(project_id:number){
+   return getWithAuth<number>(`/api/v1/project/${project_id}/getItemNums`)
 }
 async function getProjectItemsByFilter(
   filter: FilterBody & { project_id: number }
@@ -237,6 +241,7 @@ async function aiAudit(items:Item[]){
   )
 }
 export {
+  getItemsAmount,
   login,
   getMyInfo,
   updateMyInfo,
