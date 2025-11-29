@@ -1,3 +1,4 @@
+
 import {
   Item,
   Project,
@@ -71,6 +72,22 @@ async function getProjectItemsBySearch(
       query: search.query,
     },
   });
+}
+async function getProjectItemsByPagination(
+  project_id: number,
+  page: number,
+  page_size: number
+) {
+  return postWithAuth<Item[]>('/api/v1/item/select', {
+    body: {
+      project_id: project_id,
+      page: page,
+      page_size: page_size,
+    },
+  });
+}
+async function getItemsAmount(project_id: number) {
+  return getWithAuth<number>(`/api/v1/project/${project_id}/getItemNums`);
 }
 async function getProjectItemsByFilter(
   filter: FilterBody & { project_id: number }
@@ -214,7 +231,16 @@ async function getProjectRole(project_id: number) {
 async function logout() {
   return await getWithAuth<null>('/api/v1/auth/logout');
 }
+
+async function aiAudit(items: Item[]) {
+  return postWithAuth<null>('/api/v1/llm/audit', {
+    body: {
+      data: items,
+    },
+  });
+}
 export {
+  getItemsAmount,
   login,
   getMyInfo,
   updateMyInfo,
@@ -240,4 +266,6 @@ export {
   selectUser,
   getProjectRole,
   logout,
+  aiAudit,
+  getProjectItemsByPagination,
 };

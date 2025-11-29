@@ -4,8 +4,6 @@ import { StatusButton } from './Status';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from '@/components/ui/Dialog';
 
 interface AvatarChangeProps {

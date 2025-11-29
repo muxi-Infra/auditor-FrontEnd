@@ -126,12 +126,13 @@ export default function AdvaceFilter() {
 
   React.useEffect(() => {
     getAllTags(project_id).then((response) => {
+      console.log(response);
       setTags(response);
     });
   }, [project_id]);
   React.useEffect(() => {
     getAllMembers(project_id).then((response) => {
-      setMembers(response);
+      setMembers(response ?? []);
     });
   }, [project_id]);
 
