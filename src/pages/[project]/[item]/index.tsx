@@ -73,6 +73,7 @@ export default function EntryPage() {
       allItems[previousIndex]?.id as number
     );
   };
+  const displayImage = itemData?.content.topic.pictures?itemData?.content.topic.pictures:[];
   return (
     <div className="flex h-full min-w-[80%] flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -94,7 +95,7 @@ export default function EntryPage() {
             </div>
           </div>
           <div className="relative flex w-64 items-center justify-center">
-            <img src={itemData?.content.topic.pictures[imgIndex]} alt="图片" />
+            <img src={displayImage[imgIndex]} alt="图片" />
             <div className="absolute bottom-0 right-0 flex gap-2 p-2">
               <ImageButton
                 direction="prev"
