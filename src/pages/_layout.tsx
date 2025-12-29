@@ -108,7 +108,7 @@ function Header({ menu }: { menu: ReactNode }) {
         <Avatar className="size-10" onClick={() => setOpenMenu(!openMenu)}>
           {/* <AvatarImage src="https://www.booling.cn/assets/avatar-bf4f5557.webp" /> */}
           <AvatarImage src={user?.avatar} />
-          <AvatarFallback>瑜伽</AvatarFallback>
+          <AvatarFallback><img src='/user.png'></img></AvatarFallback>
         </Avatar>
         <AnimatePresence>
           {openMenu && (
@@ -119,7 +119,7 @@ function Header({ menu }: { menu: ReactNode }) {
               className="absolute right-36 top-16"
             >
               <Card onClick={() => handlelogout()}>
-                <CardContent className="whitespace-nowrap p-3 pt-6">
+                <CardContent className="whitespace-nowrap p-3 cursor-pointer">
                   登出
                 </CardContent>
               </Card>
