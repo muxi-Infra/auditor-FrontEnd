@@ -11,15 +11,15 @@ interface AvatarChangeProps {
   onAvatarChange: (file: File) => void;
 }
 
-const DEFAULT_AVATAR = '../src/assets/icons/user.png';
+
 
 export function AvatarChange({
-  avatarUrl = DEFAULT_AVATAR,
+  
   onAvatarChange,
 }: AvatarChangeProps) {
   const [image, setImage] = useState<File>();
   const [editorOpen, setEditorOpen] = useState<boolean>(false);
-  const [draftAvatar, setDraftAvatar] = useState<string | null>(null);
+  const [draftAvatar, setDraftAvatar] = useState<string | undefined>(undefined);
   const editorRef = useRef<AvatarEditor>(null);
   const [scale, setScale] = useState(1);
 
@@ -56,7 +56,7 @@ export function AvatarChange({
       {/* 头像展示区 */}
       <div className="relative flex h-[140px] w-[140px] flex-row justify-end rounded-lg">
         <img
-          src={draftAvatar || avatarUrl}
+          src={draftAvatar || "/user.png"}
           alt=""
           className="h-full w-full rounded-full"
         />
