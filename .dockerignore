@@ -1,0 +1,10 @@
+# Node 依赖
+node_modules
+.pnpm-store
+
+dist
+
+.git
+.gitignore
+
+.idea
