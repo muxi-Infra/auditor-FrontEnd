@@ -32,7 +32,8 @@ const mapStatusToVariant = (status: number): StatusProps['variant'] => {
 
 const EntryList = () => {
   const { projectId } = useRoute();
-  const { items, setItems, setOriginalItems } = useItemStore();
+  const { items, setItems, setOriginalItems, setCurrentPage, pageSize } =
+    useItemStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [auditManyBody, setAuditMany] = useState<itemToAudit[]>([]);
@@ -101,6 +102,7 @@ const EntryList = () => {
 
     setLoading(true);
     setError(null);
+    setCurrentPage(1);
     getProjectItems(projectId)
       .then((response) => {
         if (response === null) {
@@ -117,7 +119,7 @@ const EntryList = () => {
       .finally(() => setLoading(false));
     getItemsAmount(projectId)
       .then((response) => {
-        const pages = Math.ceil(response / 10);
+        const pages = Math.ceil(response / pageSize);
         setTotalPage(pages);
       })
       .catch((e) => {

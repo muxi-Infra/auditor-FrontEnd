@@ -7,30 +7,27 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/Pagination';
-import { useState } from 'react';
 import { getProjectItemsByPagination } from '@/apis';
 import useItemStore from '@/stores/items';
 interface TestPaginationProps {
   project_id: number;
-  currentPage?: number;
   totalPage?: number;
 }
 
-export function TestPagination({
-  project_id,
-  currentPage = 1,
-  totalPage = 100,
-}: TestPaginationProps) {
-  const [curPage, setCurPage] = useState<number>(currentPage);
-  const { setItems, setOriginalItems } = useItemStore();
+export function TestPagination({ project_id, totalPage = 100 }: TestPaginationProps) {
+  const {
+    currentPage: curPage,
+    pageSize,
+    setItems,
+    setOriginalItems,
+    setCurrentPage,
+  } = useItemStore();
   const handlePagination = (page: number) => {
-    getProjectItemsByPagination(project_id, page, 10)
+    getProjectItemsByPagination(project_id, page, pageSize)
       .then((res) => {
-        console.log(curPage);
         setItems(res);
-
         setOriginalItems(res);
-        setCurPage(page);
+        setCurrentPage(page);
       })
       .catch((e) => {
         console.log(e);
