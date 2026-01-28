@@ -10,6 +10,7 @@ import {
   Member,
   UpdateProject,
   ProjectRole,
+  AiAuditItem,
 } from './types';
 import {
   getWithAuth,
@@ -232,7 +233,7 @@ async function logout() {
   return await getWithAuth<null>('/api/v1/auth/logout');
 }
 
-async function aiAudit(items: Item[]) {
+async function aiAudit(items: AiAuditItem[]) {
   return postWithAuth<null>('/api/v1/llm/audit', {
     body: {
       data: items,

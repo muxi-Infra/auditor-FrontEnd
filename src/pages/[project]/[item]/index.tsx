@@ -87,7 +87,10 @@ export default function EntryPage() {
   };
   const handleAiAudit = () => {
     if (!itemData) return;
-    aiAudit([itemData])
+    aiAudit([{
+      ...itemData,
+      projectID: projectId as unknown as number,
+    }])
       .then(() => {
         alert('AI审核请求已发送');
         handleNextItem();

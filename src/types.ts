@@ -76,3 +76,5 @@ export interface ProjectRole {
   project_role: number;
   user_id: number;
 }
+
+export type AiAuditItem = Item & { projectID: number };
