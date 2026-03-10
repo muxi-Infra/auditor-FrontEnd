@@ -17,6 +17,8 @@ import { useMemo } from 'react';
 import useItemStore from '@/stores/items';
 
 export default function EntryPage() {
+  const [open, setOpen] = useState(false);
+  const comments = [1, 2, 3];
   const { projectId, itemId } = useRoute();
   const [itemData, setItemData] = useState<Item>();
   const [imgIndex, setImgIndex] = useState(0);
@@ -180,9 +182,9 @@ export default function EntryPage() {
               {itemData?.content.topic.content}
             </div>
           </div>
-          <div className="relative flex w-64 items-center justify-center">
+          <div className="relative flex w-64 items-start justify-center">
             <img src={displayImage[imgIndex]} alt="图片" />
-            <div className="absolute bottom-0 right-0 flex gap-2 p-2">
+            <div className=" absolute bottom-8 right-0 flex gap-2 p-2">
               <ImageButton
                 direction="prev"
                 onClick={() =>
@@ -198,6 +200,95 @@ export default function EntryPage() {
                 }
               ></ImageButton>
             </div>
+            <div className='bg-white w-full absolute mt-7 bottom-0 left-0 flex justify-end items-center'>
+              
+
+      {/* 评论气泡 */}
+      <div
+        onClick={() => setOpen(true)}
+        className="
+        w-10
+        h-10
+        cursor-pointer
+        bg-[rgb(255,248,237)]
+        border
+        border-[rgb(217,217,217)]
+        px-0
+        py-0
+        rounded-tl-full
+        rounded-tr-full
+        rounded-bl-full
+        rounded-br-none
+        hover:shadow
+        transition
+        "
+      >
+      </div>
+
+      {/* 评论面板 */}
+      {open && (
+        <div
+          className="
+          absolute
+          bottom-0
+          right-0
+          w-[400px]
+          max-h-[300px]
+          overflow-y-auto
+          bg-[rgb(255,248,237)]
+          border
+          border-[rgb(217,217,217)]
+          rounded-xl
+          shadow-lg
+          animate-[scaleIn_0.2s_ease]
+          "
+        >
+
+          {/* header */}
+          <div className="flex justify-between items-center px-4 py-2 border-b border-[rgb(217,217,217)] font-semibold">
+            <span>评论详情</span>
+
+            <button
+              onClick={() => setOpen(false)}
+              className="text-xl hover:text-gray-500"
+            >
+              ×
+            </button>
+          </div>
+
+          {/* 评论列表 */}
+          <div className="p-4 space-y-4">
+
+            {comments.map((item) => (
+              <div key={item} className="flex gap-3">
+
+                {/* 头像 */}
+                <div className="w-9 h-9 rounded-full bg-gray-300 flex-shrink-0" />
+
+                {/* 内容 */}
+                <div className="flex-1">
+
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    用户名称
+                    <span className="text-xs text-gray-400">
+                      2026年3月3日
+                    </span>
+                  </div>
+
+                  <div className="text-sm text-gray-700 leading-relaxed mt-1">
+                    评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容！
+                  </div>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+        </div>
+      )}
+   
+              </div>
           </div>
         </CardContent>
         <CardFooter className="absolute bottom-0 flex gap-2">
