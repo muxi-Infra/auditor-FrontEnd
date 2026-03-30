@@ -18,10 +18,11 @@ import useItemStore from '@/stores/items';
 
 export default function EntryPage() {
   const [open, setOpen] = useState(false);
-  const comments = [1, 2, 3];
   const { projectId, itemId } = useRoute();
   const [itemData, setItemData] = useState<Item>();
   const [imgIndex, setImgIndex] = useState(0);
+  const [lastCommentImgIndex, setLastCommentImgIndex] = useState(0);
+  const [nextCommentImgIndex, setNextCommentImgIndex] = useState(0);
   const [reason, setReason] = useState('');
   const [allItems, setAllItems] = useState<Item[]>([]);
   const { toProjectItem } = useNavigateToProject();
@@ -73,6 +74,10 @@ export default function EntryPage() {
       getItemDetail(itemId).then(setItemData);
     }
   }, [itemId]);
+  useEffect(() => {
+    setLastCommentImgIndex(0);
+    setNextCommentImgIndex(0);
+  }, [itemData?.id]);
   const previousIndex = useMemo(() => {
     if (allItems.length === 0 || index === -1) return -1;
     if (index - 1 < 0) return -1;
@@ -232,58 +237,101 @@ export default function EntryPage() {
           absolute
           bottom-0
           right-0
-          w-[400px]
-          max-h-[300px]
-          overflow-y-auto
+          w-[559px]
           bg-[rgb(255,248,237)]
           border
           border-[rgb(217,217,217)]
-          rounded-xl
+          rounded-md
           shadow-lg
           animate-[scaleIn_0.2s_ease]
           "
         >
 
           {/* header */}
-          <div className="flex justify-between items-center px-4 py-2 border-b border-[rgb(217,217,217)] font-semibold">
-            <span>评论详情</span>
+          <div className="flex justify-between items-center px-5 py-2 border-b border-[rgb(217,217,217)] font-normal text-[14px]">
+            <span>辅助信息</span>
 
             <button
               onClick={() => setOpen(false)}
-              className="text-xl hover:text-gray-500"
+              className="text-2xl font-[1px] leading-none hover:text-gray-500"
             >
-              ×
+              x
             </button>
           </div>
 
-          {/* 评论列表 */}
-          <div className="p-4 space-y-4">
-
-            {comments.map((item) => (
-              <div key={item} className="flex gap-3">
-
-                {/* 头像 */}
-                <div className="w-9 h-9 rounded-full bg-gray-300 flex-shrink-0" />
-
-                {/* 内容 */}
-                <div className="flex-1">
-
-                  <div className="flex items-center gap-2 text-sm font-medium">
-                    用户名称
-                    <span className="text-xs text-gray-400">
-                      2026年3月3日
-                    </span>
-                  </div>
-
-                  <div className="text-sm text-gray-700 leading-relaxed mt-1">
-                    评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容！
-                  </div>
-
-                </div>
-
+          <div className="p-5 space-y-6">
+            <div className="flex gap-6">
+              <div className="flex-1 h-[140px] rounded-[5px] bg-white px-5 py-4 pr-3 text-[14px] leading-[133%] text-[#111] overflow-y-auto whitespace-pre-wrap break-all">
+                {itemData?.content.last_comment.content || '-'}
               </div>
-            ))}
-
+              <div className="relative h-[140px] w-[120px] overflow-hidden rounded-md bg-[#cfcfcf]">
+                {(itemData?.content.last_comment.pictures?.length ?? 0) > 0 && (
+                  <img
+                    src={itemData?.content.last_comment.pictures[lastCommentImgIndex]}
+                    alt="上方评论图片"
+                    className="h-full w-full object-cover"
+                  />
+                )}
+                <div className="absolute bottom-0 right-0 flex gap-3">
+                  <ImageButton
+                    className='w-[24px] h-[24px] bg-[#B0ACAA]/25'
+                    direction="prev"
+                    onClick={() =>
+                      setLastCommentImgIndex((prev) =>
+                        prev > 0 ? prev - 1 : prev
+                      )
+                    }
+                  />
+                  <ImageButton
+                  className='w-[24px] h-[24px] bg-[#B0ACAA]/25'
+                    direction="next"
+                    onClick={() =>
+                      setLastCommentImgIndex((prev) => {
+                        const maxIndex =
+                          (itemData?.content.last_comment.pictures?.length ?? 1) - 1;
+                        return prev < maxIndex ? prev + 1 : prev;
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-6">
+              <div className="flex-1 h-[140px] rounded-[5px] bg-white px-5 py-4 pr-3 text-[14px] leading-[133%] text-[#111] overflow-y-auto whitespace-pre-wrap break-all">
+                {itemData?.content.next_comment.content || '-'}
+              </div>
+              <div className="relative h-[140px] w-[120px] overflow-hidden rounded-md bg-[#cfcfcf]">
+                {(itemData?.content.next_comment.pictures?.length ?? 0) > 0 && (
+                  <img
+                    src={itemData?.content.next_comment.pictures[nextCommentImgIndex]}
+                    alt="下方评论图片"
+                    className="h-full w-full object-cover"
+                  />
+                )}
+                <div className="absolute bottom-0 right-0 flex gap-3">
+                  <ImageButton
+                  className='w-[24px] h-[24px] bg-[#B0ACAA]/25'
+                    direction="prev"
+                    onClick={() =>
+                      setNextCommentImgIndex((prev) =>
+                        prev > 0 ? prev - 1 : prev
+                      )
+                    }
+                  />
+                  <ImageButton
+                  className='w-[24px] h-[24px] bg-[#B0ACAA]/25'
+                    direction="next"
+                    onClick={() =>
+                      setNextCommentImgIndex((prev) => {
+                        const maxIndex =
+                          (itemData?.content.next_comment.pictures?.length ?? 1) - 1;
+                        return prev < maxIndex ? prev + 1 : prev;
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

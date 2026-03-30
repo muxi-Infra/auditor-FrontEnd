@@ -90,7 +90,7 @@ export default function Mangement() {
 
   const handleEditMember = () => {
     setMemberStatus('edit');
-    console.log(members);
+  
   };
   const handleSaveProject = () => {
     updateProject(project_id, updatedProject).then((_response) => {
@@ -121,7 +121,7 @@ export default function Mangement() {
   };
   const handleChangeRole = (project_role: number) => {
     console.log(projectRole);
-
+   console.log(user?.role, user?.project_role)
     setProjectRole((prev) => {
       const safePrev = prev ?? []; // 如果为null则用空数组
       return safePrev.map((member) => ({

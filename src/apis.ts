@@ -38,16 +38,16 @@ async function getProjectList() {
 
 async function createProject(
   name: string,
-  logo: string,
   rule: string,
-  members: number[]
+  description: string,
+  users: ProjectRole[]
 ) {
   return postWithAuth<number>('/api/v1/project/create', {
     body: {
-      name: name,
-      logo: logo,
+      name,
       audit_rule: rule,
-      user_ids: members,
+      description,
+      users,
     },
   });
 }
