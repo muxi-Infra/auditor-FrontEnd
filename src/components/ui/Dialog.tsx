@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react';
 import { cn } from '@/utils/style';
 
 type DialogContextType = {
@@ -30,20 +36,20 @@ export function Dialog({ children, open = false, onOpenChange }: DialogProps) {
     setIsOpen(open);
   }, [open]);
 
-  useEffect(() => {
-    if (onOpenChange) {
-      onOpenChange(isOpen);
-    }
-  }, [isOpen, onOpenChange]);
+  const setOpen = useCallback(
+    (nextOpen: boolean) => {
+      setIsOpen(nextOpen);
+      onOpenChange?.(nextOpen);
+    },
+    [onOpenChange]
+  );
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
   return (
-    <DialogContext.Provider
-      value={{ open: isOpen, setOpen: setIsOpen, handleClose }}
-    >
+    <DialogContext.Provider value={{ open: isOpen, setOpen, handleClose }}>
       {children}
     </DialogContext.Provider>
   );

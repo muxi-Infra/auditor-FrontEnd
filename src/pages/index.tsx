@@ -28,7 +28,7 @@ export default function Page() {
       })
       .catch(() => {
         const landing = `${window.location.host}/login`;
-        window.location.href = `http://pass.muxi-tech.xyz/#/login_auth?landing=${landing}&client_id=dc0c99b7-4e9e-4e61-8344-258141fd673d`;
+        window.location.href = `http://pass.muxixyz.com/#/login_auth?landing=${landing}&client_id=dc0c99b7-4e9e-4e61-8344-258141fd673d`;
       });
   }, []);
 

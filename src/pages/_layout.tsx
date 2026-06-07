@@ -162,7 +162,7 @@ function AppSidebar() {
             </ProjectItem>
           ))}
           <CreateProjectDialog
-            addRight={user?.role === 2}
+            addRight={user?.role === 2 && user?.project_role === 2}
           ></CreateProjectDialog>
         </SidebarMenu>
       </SidebarContent>

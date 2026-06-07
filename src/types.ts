@@ -3,6 +3,7 @@ export interface User {
   email?: string;
   name?: string | undefined;
   role?: number;
+  project_role?: number;
   id?: number | undefined;
 }
 
