@@ -114,7 +114,6 @@ const EntryList = () => {
           setOriginalItems(response);
           console.log(response);
         }
-        setItems(response.items);
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
