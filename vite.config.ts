@@ -8,8 +8,8 @@ import path from 'path';
 export default defineConfig({
   server: {
     proxy: {
-      '/api': {
-        target: 'http://81.68.223.23:12810',
+      '/api/v1': {
+        target: 'https://auditor.muxixyz.com/',
         changeOrigin: true,
       },
     },

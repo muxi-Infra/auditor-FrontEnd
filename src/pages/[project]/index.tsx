@@ -114,6 +114,7 @@ const EntryList = () => {
           setOriginalItems(response);
           console.log(response);
         }
+        setItems(response.items);
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -179,10 +180,12 @@ const EntryList = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {items.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell className="text-center">
-                <Checkbox
+          {items.map((item) => {
+          console.log(item);
+          return (
+              <TableRow key={item.id}>
+                <TableCell className="text-center">
+                  <Checkbox
                   checked={auditManyBody.some((i) => item.id === i.item_id)}
                   onClick={() =>
                     handleChangeboxChange({
@@ -191,33 +194,34 @@ const EntryList = () => {
                     })
                   }
                 ></Checkbox>
-              </TableCell>
-              <TableCell className="text-center">
-                <Link to={`${item.id}`} className="flex flex-col gap-1">
-                  <div className="font-medium">{item.content.topic.title}</div>
-                  <div className="text-muted-foreground text-sm">
-                    {item.content.topic.content}
+                </TableCell>
+                <TableCell className="text-center">
+                  <Link to={`${item.id}`} className="flex flex-col gap-1">
+                    <div className="font-medium">{item.content.topic.title}</div>
+                    <div className="text-muted-foreground text-sm">
+                      {item.content.topic.content}
+                    </div>
+                  </Link>
+                </TableCell>
+                <TableCell className="text-center">
+                  {new Date(item.public_time).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-center">{item.author}</TableCell>
+                <TableCell className="text-center">
+                  <div className="flex flex-wrap items-center justify-center gap-1">
+                    {(item?.tags ?? []).map((tag: string, index: number) => (
+                      <Tag key={index}>{tag}</Tag>
+                    ))}
                   </div>
-                </Link>
-              </TableCell>
-              <TableCell className="text-center">
-                {new Date(item.public_time).toLocaleDateString()}
-              </TableCell>
-              <TableCell className="text-center">{item.author}</TableCell>
-              <TableCell className="text-center">
-                <div className="flex flex-wrap items-center justify-center gap-1">
-                  {(item?.tags ?? []).map((tag: string, index: number) => (
-                    <Tag key={index}>{tag}</Tag>
-                  ))}
-                </div>
-              </TableCell>
-              <TableCell className="text-center">
-                <Status variant={mapStatusToVariant(item.status)}>
+                </TableCell>
+                <TableCell className="text-center">
+                  <Status variant={mapStatusToVariant(item.status)}>
                   {mapStatusToVariant(item.status)?.toUpperCase()}
                 </Status>
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+              </TableRow>
+            );
+        })}
         </TableBody>
       </Table>
       {items.length !== 0 ? (
