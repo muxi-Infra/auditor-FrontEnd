@@ -22,7 +22,7 @@ import useUserStore from '@/stores/user';
 interface CreateProjectDialogProps {
   addRight: boolean;
 }
-export function CreateProjectDialog({ addRight }: CreateProjectDialogProps) {
+export function CreateProjectDialog(_props: CreateProjectDialogProps) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { setProjects } = useProjectStore();
